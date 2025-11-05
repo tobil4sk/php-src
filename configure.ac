@@ -528,6 +528,10 @@ dnl Check __builtin_cpu_supports
 PHP_CHECK_BUILTIN_CPU_SUPPORTS
 dnl Check __builtin_frame_address
 PHP_CHECK_BUILTIN_FRAME_ADDRESS
+dnl Check __builtin_align_down
+PHP_CHECK_BUILTIN_ALIGN_DOWN
+dnl Check __builtin_align_up
+PHP_CHECK_BUILTIN_ALIGN_UP
 dnl Check prctl
 PHP_CHECK_PRCTL
 dnl Check procctl

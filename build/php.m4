@@ -2767,6 +2767,46 @@ AC_DEFUN([PHP_CHECK_BUILTIN_FRAME_ADDRESS], [
 ])
 
 dnl
+dnl PHP_CHECK_BUILTIN_ALIGN_DOWN
+dnl
+AC_DEFUN([PHP_CHECK_BUILTIN_ALIGN_DOWN], [
+  AC_MSG_CHECKING([for __builtin_align_down])
+
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([], [[
+    return __builtin_align_down(1, 2) == 0 ? 1 : 0;
+  ]])], [
+    have_builtin_align_down=1
+    AC_MSG_RESULT([yes])
+  ], [
+    have_builtin_align_down=0
+    AC_MSG_RESULT([no])
+  ])
+
+  AC_DEFINE_UNQUOTED([PHP_HAVE_BUILTIN_ALIGN_DOWN],
+   [$have_builtin_align_down], [Whether the compiler supports __builtin_align_down])
+])
+
+dnl
+dnl PHP_CHECK_BUILTIN_ALIGN_UP
+dnl
+AC_DEFUN([PHP_CHECK_BUILTIN_ALIGN_UP], [
+  AC_MSG_CHECKING([for __builtin_align_up])
+
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([], [[
+    return __builtin_align_up(1, 2) == 2 ? 1 : 0;
+  ]])], [
+    have_builtin_align_up=1
+    AC_MSG_RESULT([yes])
+  ], [
+    have_builtin_align_up=0
+    AC_MSG_RESULT([no])
+  ])
+
+  AC_DEFINE_UNQUOTED([PHP_HAVE_BUILTIN_ALIGN_UP],
+   [$have_builtin_align_up], [Whether the compiler supports __builtin_align_up])
+])
+
+dnl
 dnl PHP_PATCH_CONFIG_HEADERS([FILE])
 dnl
 dnl PACKAGE_* symbols are automatically defined by Autoconf. When including
