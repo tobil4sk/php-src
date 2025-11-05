@@ -187,7 +187,11 @@ static int zend_file_cache_flock(int fd, int type)
 } while (0)
 
 static const uint32_t uninitialized_bucket[-HT_MIN_MASK] =
+#ifdef __CHERI_PURE_CAPABILITY__
+	{HT_INVALID_IDX, HT_INVALID_IDX, HT_INVALID_IDX, HT_INVALID_IDX};
+#else
 	{HT_INVALID_IDX, HT_INVALID_IDX};
+#endif
 
 typedef struct _zend_file_cache_metainfo {
 	char         magic[8];
