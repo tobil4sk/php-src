@@ -24,12 +24,46 @@
 #define ZEND_MM_PAGES      (ZEND_MM_CHUNK_SIZE / ZEND_MM_PAGE_SIZE)  /* 512 */
 #define ZEND_MM_FIRST_PAGE (1)
 
-#define ZEND_MM_MIN_SMALL_SIZE		8
+#ifdef __CHERI_PURE_CAPABILITY__
+# define ZEND_MM_MIN_SMALL_SIZE		16
+#else
+# define ZEND_MM_MIN_SMALL_SIZE		8
+#endif
+
 #define ZEND_MM_MAX_SMALL_SIZE      3072
 #define ZEND_MM_MAX_LARGE_SIZE      (ZEND_MM_CHUNK_SIZE - (ZEND_MM_PAGE_SIZE * ZEND_MM_FIRST_PAGE))
 
 /* num, size, count, pages */
-#define ZEND_MM_BINS_INFO(_, x, y) \
+#ifdef __CHERI_PURE_CAPABILITY__
+# define ZEND_MM_BINS_INFO(_, x, y) \
+	_( 0,   16,  256, 1, x, y) \
+	_( 1,   32,  128, 1, x, y) \
+	_( 2,   48,   85, 1, x, y) \
+	_( 3,   64,   64, 1, x, y) \
+	_( 4,   80,   51, 1, x, y) \
+	_( 5,   96,   42, 1, x, y) \
+	_( 6,  112,   36, 1, x, y) \
+	_( 7,  128,   32, 1, x, y) \
+	_( 8,  160,   25, 1, x, y) \
+	_( 9,  192,   21, 1, x, y) \
+	_(10,  224,   18, 1, x, y) \
+	_(11,  256,   16, 1, x, y) \
+	_(12,  320,   64, 5, x, y) \
+	_(13,  384,   32, 3, x, y) \
+	_(14,  448,    9, 1, x, y) \
+	_(15,  512,    8, 1, x, y) \
+	_(16,  640,   32, 5, x, y) \
+	_(17,  768,   16, 3, x, y) \
+	_(18,  896,    9, 2, x, y) \
+	_(19, 1024,    8, 2, x, y) \
+	_(20, 1280,   16, 5, x, y) \
+	_(21, 1536,    8, 3, x, y) \
+	_(22, 1792,   16, 7, x, y) \
+	_(23, 2048,    8, 4, x, y) \
+	_(24, 2560,    8, 5, x, y) \
+	_(25, 3072,    4, 3, x, y)
+#else
+# define ZEND_MM_BINS_INFO(_, x, y) \
 	_( 0,    8,  512, 1, x, y) \
 	_( 1,   16,  256, 1, x, y) \
 	_( 2,   24,  170, 1, x, y) \
@@ -60,5 +94,6 @@
 	_(27, 2048,    8, 4, x, y) \
 	_(28, 2560,    8, 5, x, y) \
 	_(29, 3072,    4, 3, x, y)
+#endif
 
 #endif /* ZEND_ALLOC_SIZES_H */
