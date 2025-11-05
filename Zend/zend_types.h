@@ -486,7 +486,7 @@ struct _zend_array {
 #define HT_SIZE_TO_MASK(nTableSize) \
 	((uint32_t)(-((nTableSize) + (nTableSize))))
 #define HT_HASH_SIZE(nTableMask) \
-	(((size_t)-(uint32_t)(nTableMask)) * sizeof(uint32_t))
+	ZEND_MM_ALIGNED_SIZE(((size_t)-(uint32_t)(nTableMask)) * sizeof(uint32_t))
 #define HT_DATA_SIZE(nTableSize) \
 	((size_t)(nTableSize) * sizeof(Bucket))
 #define HT_SIZE_EX(nTableSize, nTableMask) \
@@ -552,10 +552,8 @@ struct _zend_array {
 # define HT_HASH_RESET(ht) \
 	memset(&HT_HASH(ht, (ht)->nTableMask), HT_INVALID_IDX, HT_HASH_SIZE((ht)->nTableMask))
 #endif
-#define HT_HASH_RESET_PACKED(ht) do { \
-		HT_HASH(ht, -2) = HT_INVALID_IDX; \
-		HT_HASH(ht, -1) = HT_INVALID_IDX; \
-	} while (0)
+#define HT_HASH_RESET_PACKED(ht) \
+	memset(HT_GET_DATA_ADDR(ht), HT_INVALID_IDX, HT_HASH_SIZE((ht)->nTableMask))
 #define HT_HASH_TO_BUCKET(ht, idx) \
 	HT_HASH_TO_BUCKET_EX((ht)->arData, idx)
 
