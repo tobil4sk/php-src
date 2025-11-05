@@ -102,9 +102,20 @@ static void zend_hash_persist(HashTable *ht)
 
 	if (HT_FLAGS(ht) & HASH_FLAG_UNINITIALIZED) {
 		if (EXPECTED(!ZCG(current_persistent_script)->corrupted)) {
+			// this seems to set an invalid value?
+#ifdef __CHERI_PURE_CAPABILITY__
+			/* Do not use HT_SET_DATA_ADDR, because that aligns the pointer to be outside the uninitialized_bucket bounds */
+			ht->arData = (Bucket*)&ZCSG(uninitialized_bucket)[2];
+#else
 			HT_SET_DATA_ADDR(ht, &ZCSG(uninitialized_bucket));
+#endif
 		} else {
+#ifdef __CHERI_PURE_CAPABILITY__
+			/* Do not use HT_SET_DATA_ADDR, because that aligns the pointer to be outside the uninitialized_bucket bounds */
+			ht->arData = (Bucket*)&uninitialized_bucket[2];
+#else
 			HT_SET_DATA_ADDR(ht, &uninitialized_bucket);
+#endif
 		}
 		return;
 	}
@@ -112,9 +123,19 @@ static void zend_hash_persist(HashTable *ht)
 		efree(HT_GET_DATA_ADDR(ht));
 		ht->nTableMask = HT_MIN_MASK;
 		if (EXPECTED(!ZCG(current_persistent_script)->corrupted)) {
+#ifdef __CHERI_PURE_CAPABILITY__
+			/* Do not use HT_SET_DATA_ADDR, because that aligns the pointer to be outside the uninitialized_bucket bounds */
+			ht->arData = (Bucket*)&ZCSG(uninitialized_bucket)[2];
+#else
 			HT_SET_DATA_ADDR(ht, &ZCSG(uninitialized_bucket));
+#endif
 		} else {
+#ifdef __CHERI_PURE_CAPABILITY__
+			/* Do not use HT_SET_DATA_ADDR, because that aligns the pointer to be outside the uninitialized_bucket bounds */
+			ht->arData = (Bucket*)&uninitialized_bucket[2];
+#else
 			HT_SET_DATA_ADDR(ht, &uninitialized_bucket);
+#endif
 		}
 		HT_FLAGS(ht) |= HASH_FLAG_UNINITIALIZED;
 		return;

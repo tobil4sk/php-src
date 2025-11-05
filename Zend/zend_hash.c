@@ -264,7 +264,12 @@ static zend_always_inline void _zend_hash_init_int(HashTable *ht, uint32_t nSize
 	GC_TYPE_INFO(ht) = GC_ARRAY | (persistent ? ((GC_PERSISTENT|GC_NOT_COLLECTABLE) << GC_FLAGS_SHIFT) : 0);
 	HT_FLAGS(ht) = HASH_FLAG_UNINITIALIZED;
 	ht->nTableMask = HT_MIN_MASK;
+#ifdef __CHERI_PURE_CAPABILITY__
+	/* Do not use HT_SET_DATA_ADDR, because that aligns the pointer to be outside the uninitialized_bucket bounds */
+	ht->arData = (Bucket*)&uninitialized_bucket[2];
+#else
 	HT_SET_DATA_ADDR(ht, &uninitialized_bucket);
+#endif
 	ht->nNumUsed = 0;
 	ht->nNumOfElements = 0;
 	ht->nInternalPointer = 0;
@@ -2462,7 +2467,12 @@ ZEND_API HashTable* ZEND_FASTCALL zend_array_dup(const HashTable *source)
 		target->nNextFreeElement = source->nNextFreeElement;
 		target->nInternalPointer = 0;
 		target->nTableSize = HT_MIN_SIZE;
+#ifdef __CHERI_PURE_CAPABILITY__
+		/* Do not use HT_SET_DATA_ADDR, because that aligns the pointer to be outside the uninitialized_bucket bounds */
+		target->arData = (Bucket*)&uninitialized_bucket[2];
+#else
 		HT_SET_DATA_ADDR(target, &uninitialized_bucket);
+#endif
 	} else if (GC_FLAGS(source) & IS_ARRAY_IMMUTABLE) {
 		ZEND_ASSERT(!(HT_FLAGS(source) & HASH_FLAG_HAS_EMPTY_IND));
 		HT_FLAGS(target) = HT_FLAGS(source) & HASH_FLAG_MASK;
