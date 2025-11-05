@@ -64,6 +64,13 @@ or with `MacPorts`:
 sudo port install autoconf bison re2c libiconv libxml2 sqlite3
 ```
 
+On CheriBSD:
+
+```shell
+sudo pkg64c install autoconf bison libiconv libxml2 sqlite3 pcre2
+sudo pkg64 install re2c
+```
+
 Generate configure:
 
 ```shell
@@ -78,6 +85,9 @@ Configure your build. `--enable-debug` is recommended for development, see
 ./configure --enable-debug
 # For production
 ./configure
+
+# options used for pure-cap CHERI:
+./configure --enable-debug --without-iconv --with-external-pcre --disable-fiber-asm
 ```
 
 Build PHP. To speed up the build, specify the maximum number of jobs using the
