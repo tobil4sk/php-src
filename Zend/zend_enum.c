@@ -535,10 +535,10 @@ ZEND_API zend_class_entry *zend_register_internal_enum(
 static zend_ast_ref *create_enum_case_ast(
 		zend_string *class_name, zend_string *case_name, zval *value) {
 	// TODO: Use custom node type for enum cases?
-	size_t size = sizeof(zend_ast_ref) + zend_ast_size(3)
+	size_t size = ZEND_MM_ALIGNED_SIZE(sizeof(zend_ast_ref)) + zend_ast_size(3)
 		+ (value ? 3 : 2) * sizeof(zend_ast_zval);
 	char *p = pemalloc(size, 1);
-	zend_ast_ref *ref = (zend_ast_ref *) p; p += sizeof(zend_ast_ref);
+	zend_ast_ref *ref = (zend_ast_ref *) p; p += ZEND_MM_ALIGNED_SIZE(sizeof(zend_ast_ref));
 	GC_SET_REFCOUNT(ref, 1);
 	GC_TYPE_INFO(ref) = GC_CONSTANT_AST | GC_PERSISTENT | GC_IMMUTABLE;
 
