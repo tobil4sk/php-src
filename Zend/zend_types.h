@@ -448,7 +448,11 @@ struct _zend_array {
 
 #define HT_INVALID_IDX ((uint32_t) -1)
 
-#define HT_MIN_MASK ((uint32_t) -2)
+#ifdef __CHERI_PURE_CAPABILITY__
+# define HT_MIN_MASK ((uint32_t) -4)
+#else
+# define HT_MIN_MASK ((uint32_t) -2)
+#endif
 #define HT_MIN_SIZE 8
 
 /* HT_MAX_SIZE is chosen to satisfy the following constraints:
@@ -552,10 +556,8 @@ struct _zend_array {
 # define HT_HASH_RESET(ht) \
 	memset(&HT_HASH(ht, (ht)->nTableMask), HT_INVALID_IDX, HT_HASH_SIZE((ht)->nTableMask))
 #endif
-#define HT_HASH_RESET_PACKED(ht) do { \
-		HT_HASH(ht, -2) = HT_INVALID_IDX; \
-		HT_HASH(ht, -1) = HT_INVALID_IDX; \
-	} while (0)
+#define HT_HASH_RESET_PACKED(ht) \
+	memset(HT_GET_DATA_ADDR(ht), HT_INVALID_IDX, HT_HASH_SIZE((ht)->nTableMask))
 #define HT_HASH_TO_BUCKET(ht, idx) \
 	HT_HASH_TO_BUCKET_EX((ht)->arData, idx)
 

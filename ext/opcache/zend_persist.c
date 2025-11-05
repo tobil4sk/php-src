@@ -89,7 +89,11 @@ static void zend_persist_zval(zval *z);
 static void zend_persist_op_array(zval *zv);
 
 static const uint32_t uninitialized_bucket[-HT_MIN_MASK] =
+#ifdef __CHERI_PURE_CAPABILITY__
+	{HT_INVALID_IDX, HT_INVALID_IDX, HT_INVALID_IDX, HT_INVALID_IDX};
+#else
 	{HT_INVALID_IDX, HT_INVALID_IDX};
+#endif
 
 static void zend_hash_persist(HashTable *ht)
 {
