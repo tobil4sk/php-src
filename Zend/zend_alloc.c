@@ -1282,7 +1282,10 @@ static zend_always_inline int zend_mm_small_size_to_bin(size_t size)
 
 #define ZEND_MM_SMALL_SIZE_TO_BIN(size)  zend_mm_small_size_to_bin(size)
 
-#if ZEND_MM_HEAP_PROTECTION
+#if ZEND_MM_HEAP_PROTECTION && !defined(__CHERI_PURE_CAPABILITY__)
+/*
+ * This shadowing business is not very cheri friendly
+ */
 /* We keep track of free slots by organizing them in a linked list, with the
  * first word of every free slot being a pointer to the next one.
  *
@@ -1300,19 +1303,27 @@ static zend_always_inline int zend_mm_small_size_to_bin(size_t size)
 
 static zend_always_inline zend_mm_free_slot* zend_mm_encode_free_slot(const zend_mm_heap *heap, const zend_mm_free_slot *slot)
 {
-#ifdef WORDS_BIGENDIAN
-	return (zend_mm_free_slot*)(((uintptr_t)slot) ^ heap->shadow_key);
+#ifdef __CHERI_PURE_CAPABILITY__
+	return slot;
 #else
+# ifdef WORDS_BIGENDIAN
+	return (zend_mm_free_slot*)(((uintptr_t)slot) ^ heap->shadow_key);
+# else
 	return (zend_mm_free_slot*)(BSWAPPTR((uintptr_t)slot) ^ heap->shadow_key);
+# endif
 #endif
 }
 
 static zend_always_inline zend_mm_free_slot* zend_mm_decode_free_slot_key(uintptr_t shadow_key, zend_mm_free_slot *slot)
 {
-#ifdef WORDS_BIGENDIAN
-	return (zend_mm_free_slot*)((uintptr_t)slot ^ shadow_key);
+#ifdef __CHERI_PURE_CAPABILITY__
+	return slot;
 #else
+# ifdef WORDS_BIGENDIAN
+	return (zend_mm_free_slot*)((uintptr_t)slot ^ shadow_key);
+# else
 	return (zend_mm_free_slot*)(BSWAPPTR((uintptr_t)slot ^ shadow_key));
+# endif
 #endif
 }
 
@@ -2031,6 +2042,7 @@ static void zend_mm_init_key(zend_mm_heap *heap)
 
 ZEND_API void zend_mm_refresh_key_child(zend_mm_heap *heap)
 {
+#ifndef __CHERI_PURE_CAPABILITY__
 	uintptr_t old_key = heap->shadow_key;
 
 	zend_mm_init_key(heap);
@@ -2052,8 +2064,9 @@ ZEND_API void zend_mm_refresh_key_child(zend_mm_heap *heap)
 		}
 	}
 
-#if ZEND_DEBUG
+# if ZEND_DEBUG
 	heap->pid = getpid();
+# endif
 #endif
 }
 
