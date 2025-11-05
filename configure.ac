@@ -1126,13 +1126,13 @@ case $php_sapi_module in
         standard_libtool_flag='-prefer-pic'
         ;;
       no)
-        standard_libtool_flag='-prefer-non-pic'
+        standard_libtool_flag=''
         ;;
     esac
     EXTRA_LDFLAGS="$EXTRA_LDFLAGS -avoid-version -module"
     ;;
   *[)]
-    standard_libtool_flag='-prefer-non-pic -static'
+    standard_libtool_flag='-static'
     if test -z "$PHP_MODULES" && test -z "$PHP_ZEND_EX"; then
       enable_shared=no
     fi
