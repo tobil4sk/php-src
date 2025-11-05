@@ -970,7 +970,7 @@ static zend_always_inline uint32_t zval_gc_info(uint32_t gc_type_info) {
 #define Z_AST(zval)					(zval).value.ast
 #define Z_AST_P(zval_p)				Z_AST(*(zval_p))
 
-#define GC_AST(p)					((zend_ast*)(((char*)p) + sizeof(zend_ast_ref)))
+#define GC_AST(p)					((zend_ast*)(((char*)p) + ZEND_MM_ALIGNED_SIZE(sizeof(zend_ast_ref))))
 
 #define Z_ASTVAL(zval)				GC_AST(Z_AST(zval))
 #define Z_ASTVAL_P(zval_p)			Z_ASTVAL(*(zval_p))
