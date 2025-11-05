@@ -129,6 +129,10 @@ static size_t _real_page_size = ZEND_MM_PAGE_SIZE;
 # define ZEND_MM_FD VM_MAKE_TAG(250U)
 #endif
 
+#ifdef __CHERI_PURE_CAPABILITY__
+# include <cheriintrin.h>
+#endif
+
 #ifndef ZEND_MM_STAT
 # define ZEND_MM_STAT 1    /* track current and peak memory usage            */
 #endif
@@ -1300,9 +1304,16 @@ static zend_always_inline int zend_mm_small_size_to_bin(size_t size)
 #define ZEND_MM_FREE_SLOT_PTR_SHADOW(free_slot, bin_num) \
 	*((zend_mm_free_slot**)((char*)(free_slot) + bin_data_size[(bin_num)] - sizeof(zend_mm_free_slot*)))
 
+#if defined(__CHERI_PURE_CAPABILITY__) && defined(__FreeBSD__) && defined(__aarch64__)
+# define ZEND_MM_HEAP_PROTECTION_CHERI 1
+# include <sys/sysctl.h>
+#endif
+
 static zend_always_inline zend_mm_free_slot* zend_mm_encode_free_slot(const zend_mm_heap *heap, const zend_mm_free_slot *slot)
 {
-#ifdef WORDS_BIGENDIAN
+#ifdef ZEND_MM_HEAP_PROTECTION_CHERI
+	return (zend_mm_free_slot*)cheri_seal((uintptr_t)slot, heap->shadow_key);
+#elif defined(WORDS_BIG_ENDIAN)
 	return (zend_mm_free_slot*)(((uintptr_t)slot) ^ heap->shadow_key);
 #else
 	return (zend_mm_free_slot*)(BSWAPPTR((uintptr_t)slot) ^ heap->shadow_key);
@@ -1311,7 +1322,9 @@ static zend_always_inline zend_mm_free_slot* zend_mm_encode_free_slot(const zend
 
 static zend_always_inline zend_mm_free_slot* zend_mm_decode_free_slot_key(uintptr_t shadow_key, zend_mm_free_slot *slot)
 {
-#ifdef WORDS_BIGENDIAN
+#ifdef ZEND_MM_HEAP_PROTECTION_CHERI
+	return cheri_unseal(slot, shadow_key);
+#elif WORDS_BIGENDIAN
 	return (zend_mm_free_slot*)((uintptr_t)slot ^ shadow_key);
 #else
 	return (zend_mm_free_slot*)(BSWAPPTR((uintptr_t)slot ^ shadow_key));
@@ -2020,19 +2033,29 @@ static void zend_mm_free_huge(zend_mm_heap *heap, void *ptr ZEND_FILE_LINE_DC ZE
 /* Initialization */
 /******************/
 
+#ifndef ZEND_MM_HEAP_PROTECTION_CHERI
 static void zend_mm_refresh_key(zend_mm_heap *heap)
 {
 	zend_random_bytes_insecure(&heap->rand_state, &heap->shadow_key, sizeof(heap->shadow_key));
 }
+#endif
 
 static void zend_mm_init_key(zend_mm_heap *heap)
 {
+#ifdef ZEND_MM_HEAP_PROTECTION_CHERI
+	size_t sealcap_size = sizeof(heap->shadow_key);
+	if (sysctlbyname("security.cheri.sealcap", &heap->shadow_key, &sealcap_size, NULL, 0) == -1) {
+		fprintf(stderr, "Can't get sealing capability\n");
+	}
+#else
 	memset(&heap->rand_state, 0, sizeof(heap->rand_state));
 	zend_mm_refresh_key(heap);
+#endif
 }
 
 ZEND_API void zend_mm_refresh_key_child(zend_mm_heap *heap)
 {
+#ifndef __CHERI_PURE_CAPABILITY__
 	uintptr_t old_key = heap->shadow_key;
 
 	zend_mm_init_key(heap);
@@ -2053,7 +2076,7 @@ ZEND_API void zend_mm_refresh_key_child(zend_mm_heap *heap)
 			slot = next;
 		}
 	}
-
+#endif
 #if ZEND_DEBUG
 	heap->pid = getpid();
 #endif
@@ -2574,7 +2597,9 @@ ZEND_API void zend_mm_shutdown(zend_mm_heap *heap, bool full, bool silent)
 				&& "heap was re-used without calling zend_mm_refresh_key_child() after a fork");
 #endif
 
+#ifndef ZEND_MM_HEAP_PROTECTION_CHERI
 		zend_mm_refresh_key(heap);
+#endif
 	}
 }
 
