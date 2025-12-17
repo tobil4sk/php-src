@@ -551,7 +551,7 @@ bool zend_optimizer_update_op2_const(zend_op_array *op_array,
 		case ZEND_FETCH_LIST_R:
 		case ZEND_FETCH_LIST_W:
 			if (Z_TYPE_P(val) == IS_STRING) {
-				zend_ulong index;
+				HT_KEY_TYPE index;
 
 				if (ZEND_HANDLE_NUMERIC(Z_STR_P(val), index)) {
 					ZVAL_LONG(&tmp, index);
@@ -567,7 +567,7 @@ bool zend_optimizer_update_op2_const(zend_op_array *op_array,
 		case ZEND_ADD_ARRAY_ELEMENT:
 		case ZEND_INIT_ARRAY:
 			if (Z_TYPE_P(val) == IS_STRING) {
-				zend_ulong index;
+				HT_KEY_TYPE index;
 				if (ZEND_HANDLE_NUMERIC(Z_STR_P(val), index)) {
 					zval_ptr_dtor_nogc(val);
 					ZVAL_LONG(val, index);

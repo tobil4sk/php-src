@@ -397,9 +397,16 @@ struct _zend_string {
 	char              val[1];
 };
 
+
+#ifdef __CHERI_PURE_CAPABILITY__
+# define HT_KEY_TYPE uintptr_t
+#else
+# define HT_KEY_TYPE zend_ulong
+#endif
+
 typedef struct _Bucket {
 	zval              val;
-	zend_ulong        h;                /* hash value (or numeric index)   */
+	HT_KEY_TYPE       h;                /* hash value (or numeric index)   */
 	zend_string      *key;              /* string key or NULL for numerics */
 } Bucket;
 

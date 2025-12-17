@@ -2772,7 +2772,7 @@ static inline bool zend_is_const_default_class_ref(zend_ast *name_ast) /* {{{ */
 static inline void zend_handle_numeric_op(znode *node) /* {{{ */
 {
 	if (node->op_type == IS_CONST && Z_TYPE(node->u.constant) == IS_STRING) {
-		zend_ulong index;
+		HT_KEY_TYPE index;
 
 		if (ZEND_HANDLE_NUMERIC(Z_STR(node->u.constant), index)) {
 			zval_ptr_dtor(&node->u.constant);
@@ -2785,7 +2785,7 @@ static inline void zend_handle_numeric_op(znode *node) /* {{{ */
 static inline void zend_handle_numeric_dim(zend_op *opline, znode *dim_node) /* {{{ */
 {
 	if (Z_TYPE(dim_node->u.constant) == IS_STRING) {
-		zend_ulong index;
+		HT_KEY_TYPE index;
 
 		if (ZEND_HANDLE_NUMERIC(Z_STR(dim_node->u.constant), index)) {
 			/* For numeric indexes we also keep the original value to use by ArrayAccess

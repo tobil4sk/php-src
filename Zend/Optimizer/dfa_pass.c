@@ -431,7 +431,7 @@ int zend_dfa_optimize_calls(zend_op_array *op_array, zend_ssa *ssa)
 					HashTable *src = Z_ARRVAL_P(CT_CONSTANT_EX(op_array, op->op2.constant));
 					HashTable *dst;
 					zval *val, tmp;
-					zend_ulong idx;
+					HT_KEY_TYPE idx;
 
 					ZVAL_TRUE(&tmp);
 					dst = zend_new_array(zend_hash_num_elements(src));

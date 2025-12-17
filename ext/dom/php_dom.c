@@ -2422,7 +2422,7 @@ static zval *dom_modern_nodemap_read_dimension(zend_object *object, zval *offset
 
 	ZVAL_DEREF(offset);
 	if (Z_TYPE_P(offset) == IS_STRING) {
-		zend_ulong lval;
+		HT_KEY_TYPE lval;
 		if (ZEND_HANDLE_NUMERIC(Z_STR_P(offset), lval)) {
 			map->handler->get_item(map, (zend_long) lval, rv);
 		} else {
@@ -2450,7 +2450,7 @@ static int dom_modern_nodemap_has_dimension(zend_object *object, zval *member, i
 
 	ZVAL_DEREF(member);
 	if (Z_TYPE_P(member) == IS_STRING) {
-		zend_ulong lval;
+		HT_KEY_TYPE lval;
 		if (ZEND_HANDLE_NUMERIC(Z_STR_P(member), lval)) {
 			return (zend_long) lval >= 0 && (zend_long) lval < php_dom_get_namednodemap_length(obj);
 		} else {

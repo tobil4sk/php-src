@@ -99,7 +99,7 @@ static void zend_weakref_unref(zend_object *object, void *tagged_ptr) {
 static void zend_weakref_register(zend_object *object, void *payload) {
 	GC_ADD_FLAGS(object, IS_OBJ_WEAKLY_REFERENCED);
 
-	zend_ulong obj_key = zend_object_to_weakref_key(object);
+	HT_KEY_TYPE obj_key = zend_object_to_weakref_key(object);
 	zval *zv = zend_hash_index_lookup(&EG(weakrefs), obj_key);
 	if (Z_TYPE_P(zv) == IS_NULL) {
 		ZVAL_PTR(zv, payload);
@@ -109,21 +109,21 @@ static void zend_weakref_register(zend_object *object, void *payload) {
 	void *tagged_ptr = Z_PTR_P(zv);
 	if (ZEND_WEAKREF_GET_TAG(tagged_ptr) == ZEND_WEAKREF_TAG_HT) {
 		HashTable *ht = ZEND_WEAKREF_GET_PTR(tagged_ptr);
-		zend_hash_index_add_new_ptr(ht, (zend_ulong) payload, payload);
+		zend_hash_index_add_new_ptr(ht, (HT_KEY_TYPE) payload, payload);
 		return;
 	}
 
 	/* Convert simple pointer to hashtable. */
 	HashTable *ht = emalloc(sizeof(HashTable));
 	zend_hash_init(ht, 0, NULL, NULL, 0);
-	zend_hash_index_add_new_ptr(ht, (zend_ulong) tagged_ptr, tagged_ptr);
-	zend_hash_index_add_new_ptr(ht, (zend_ulong) payload, payload);
+	zend_hash_index_add_new_ptr(ht, (HT_KEY_TYPE) tagged_ptr, tagged_ptr);
+	zend_hash_index_add_new_ptr(ht, (HT_KEY_TYPE) payload, payload);
 	/* Replace the single WeakMap or WeakReference entry in EG(weakrefs) with a HashTable with 2 entries in place. */
 	ZVAL_PTR(zv, ZEND_WEAKREF_ENCODE(ht, ZEND_WEAKREF_TAG_HT));
 }
 
 static void zend_weakref_unregister(zend_object *object, void *payload, bool weakref_free) {
-	zend_ulong obj_key = zend_object_to_weakref_key(object);
+	HT_KEY_TYPE obj_key = zend_object_to_weakref_key(object);
 	void *tagged_ptr = zend_hash_index_find_ptr(&EG(weakrefs), obj_key);
 	ZEND_ASSERT(tagged_ptr && "Weakref not registered?");
 
@@ -146,11 +146,11 @@ static void zend_weakref_unregister(zend_object *object, void *payload, bool wea
 
 	HashTable *ht = ptr;
 #if ZEND_DEBUG
-	void *old_payload = zend_hash_index_find_ptr(ht, (zend_ulong) payload);
+	void *old_payload = zend_hash_index_find_ptr(ht, (HT_KEY_TYPE) payload);
 	ZEND_ASSERT(old_payload && "Weakref not registered?");
 	ZEND_ASSERT(old_payload == payload);
 #endif
-	zend_hash_index_del(ht, (zend_ulong) payload);
+	zend_hash_index_del(ht, (HT_KEY_TYPE) payload);
 	if (zend_hash_num_elements(ht) == 0) {
 		GC_DEL_FLAGS(object, IS_OBJ_WEAKLY_REFERENCED);
 		zend_hash_destroy(ht);
@@ -188,7 +188,7 @@ ZEND_API zend_result zend_weakrefs_hash_del(HashTable *ht, zend_object *key) {
 }
 
 static void zend_weakrefs_hash_clean_ex(HashTable *ht, int type) {
-	zend_ulong obj_key;
+	HT_KEY_TYPE obj_key;
 	ZEND_HASH_MAP_FOREACH_NUM_KEY(ht, obj_key) {
 		/* Optimization: Don't call zend_weakref_unref_single to free individual entries from ht when unregistering (which would do a hash table lookup, call zend_hash_index_del, and skip over any bucket collisions).
 		 * Let freeing the corresponding values for WeakMap entries be done in zend_hash_clean, freeing objects sequentially.
@@ -212,7 +212,7 @@ void zend_weakrefs_init(void) {
 void zend_weakrefs_notify(zend_object *object) {
 	/* Annoyingly we can't use the HT destructor here, because we need access to the key (which
 	 * is the object address), which is not provided to the dtor. */
-	const zend_ulong obj_key = zend_object_to_weakref_key(object);
+	const HT_KEY_TYPE obj_key = zend_object_to_weakref_key(object);
 	void *tagged_ptr = zend_hash_index_find_ptr(&EG(weakrefs), obj_key);
 #if ZEND_DEBUG
 	ZEND_ASSERT(tagged_ptr && "Tracking of the IS_OBJ_WEAKLY_REFERENCE flag should be precise");
@@ -400,7 +400,7 @@ static void zend_weakmap_write_dimension(zend_object *object, zval *offset, zval
 
 	zend_weakmap *wm = zend_weakmap_from(object);
 	zend_object *obj_addr = Z_OBJ_P(offset);
-	zend_ulong obj_key = zend_object_to_weakref_key(obj_addr);
+	HT_KEY_TYPE obj_key = zend_object_to_weakref_key(obj_addr);
 	Z_TRY_ADDREF_P(value);
 
 	zval *zv = zend_hash_index_find(&wm->ht, obj_key);
@@ -476,7 +476,7 @@ static HashTable *zend_weakmap_get_properties_for(zend_object *object, zend_prop
 	ALLOC_HASHTABLE(ht);
 	zend_hash_init(ht, zend_hash_num_elements(&wm->ht), NULL, ZVAL_PTR_DTOR, 0);
 
-	zend_ulong obj_key;
+	HT_KEY_TYPE obj_key;
 	zval *val;
 	ZEND_HASH_MAP_FOREACH_NUM_KEY_VAL(&wm->ht, obj_key, val) {
 		zend_object *obj = zend_weakref_key_to_object(obj_key);
@@ -510,7 +510,7 @@ HashTable *zend_weakmap_get_key_entry_gc(zend_object *object, zval **table, int 
 {
 	zend_weakmap *wm = zend_weakmap_from(object);
 	zend_get_gc_buffer *gc_buffer = zend_get_gc_buffer_create();
-	zend_ulong h;
+	HT_KEY_TYPE h;
 	zval *val;
 	ZEND_HASH_MAP_FOREACH_NUM_KEY_VAL(&wm->ht, h, val) {
 		zend_object *key = zend_weakref_key_to_object(h);
@@ -536,7 +536,7 @@ HashTable *zend_weakmap_get_entry_gc(zend_object *object, zval **table, int *n)
 HashTable *zend_weakmap_get_object_key_entry_gc(zend_object *object, zval **table, int *n)
 {
 	zend_get_gc_buffer *gc_buffer = zend_get_gc_buffer_create();
-	const zend_ulong obj_key = zend_object_to_weakref_key(object);
+	const HT_KEY_TYPE obj_key = zend_object_to_weakref_key(object);
 	void *tagged_ptr = zend_hash_index_find_ptr(&EG(weakrefs), obj_key);
 #if ZEND_DEBUG
 	ZEND_ASSERT(tagged_ptr && "Tracking of the IS_OBJ_WEAKLY_REFERENCE flag should be precise");
@@ -577,7 +577,7 @@ HashTable *zend_weakmap_get_object_key_entry_gc(zend_object *object, zval **tabl
 HashTable *zend_weakmap_get_object_entry_gc(zend_object *object, zval **table, int *n)
 {
 	zend_get_gc_buffer *gc_buffer = zend_get_gc_buffer_create();
-	const zend_ulong obj_key = zend_object_to_weakref_key(object);
+	const HT_KEY_TYPE obj_key = zend_object_to_weakref_key(object);
 	void *tagged_ptr = zend_hash_index_find_ptr(&EG(weakrefs), obj_key);
 #if ZEND_DEBUG
 	ZEND_ASSERT(tagged_ptr && "Tracking of the IS_OBJ_WEAKLY_REFERENCE flag should be precise");
@@ -620,7 +620,7 @@ static zend_object *zend_weakmap_clone_obj(zend_object *old_object)
 	zend_weakmap *new_wm = zend_weakmap_from(new_object);
 	zend_hash_copy(&new_wm->ht, &old_wm->ht, NULL);
 
-	zend_ulong obj_key;
+	HT_KEY_TYPE obj_key;
 	zval *val;
 	ZEND_HASH_MAP_FOREACH_NUM_KEY_VAL(&new_wm->ht, obj_key, val) {
 		zend_weakref_register(
@@ -665,7 +665,7 @@ static void zend_weakmap_iterator_get_current_key(zend_object_iterator *obj_iter
 	HashPosition *pos = zend_weakmap_iterator_get_pos_ptr(iter);
 
 	zend_string *string_key;
-	zend_ulong num_key;
+	HT_KEY_TYPE num_key;
 	zend_hash_key_type key_type = zend_hash_get_current_key_ex(&wm->ht, &string_key, &num_key, pos);
 	if (key_type == HASH_KEY_NON_EXISTENT) {
 		ZVAL_NULL(key);
