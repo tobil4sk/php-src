@@ -333,7 +333,7 @@ static zend_long dom_token_list_offset_convert_to_long(zval *offset, bool *faile
 	while (true) {
 		switch (Z_TYPE_P(offset)) {
 			case IS_STRING: {
-				zend_ulong index;
+				HT_KEY_TYPE index;
 				if (ZEND_HANDLE_NUMERIC(Z_STR_P(offset), index)) {
 					return (zend_long) index;
 				}

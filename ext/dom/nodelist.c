@@ -100,7 +100,7 @@ dom_nodelist_dimension_index dom_modern_nodelist_get_index(const zval *offset)
 		ret.type = DOM_NODELIST_DIM_LONG;
 		ret.lval = zend_dval_to_lval_safe(Z_DVAL_P(offset));
 	} else if (Z_TYPE_P(offset) == IS_STRING) {
-		zend_ulong lval;
+		HT_KEY_TYPE lval;
 		if (ZEND_HANDLE_NUMERIC(Z_STR_P(offset), lval)) {
 			ret.type = DOM_NODELIST_DIM_LONG;
 			ret.lval = (zend_long) lval;

@@ -5396,7 +5396,7 @@ ZEND_VM_C_LABEL(send_again):
 
 						name = Z_STR_P(&key);
 
-						zend_ulong tmp;
+						HT_KEY_TYPE tmp;
 						if (ZEND_HANDLE_NUMERIC(name, tmp)) {
 							name = NULL;
 						}
@@ -6259,7 +6259,7 @@ ZEND_VM_HANDLER(72, ZEND_ADD_ARRAY_ELEMENT, CONST|TMP|VAR|CV, CONST|TMPVAR|UNUSE
 	if (OP2_TYPE != IS_UNUSED) {
 		zval *offset = GET_OP2_ZVAL_PTR_UNDEF(BP_VAR_R);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 ZEND_VM_C_LABEL(add_again):
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -6419,7 +6419,7 @@ ZEND_VM_C_LABEL(add_unpack_again):
 				ZVAL_DEREF(val);
 				Z_TRY_ADDREF_P(val);
 
-				zend_ulong num_key;
+				HT_KEY_TYPE num_key;
 				if (Z_TYPE(key) == IS_STRING && !ZEND_HANDLE_NUMERIC(Z_STR(key), num_key)) {
 					zend_hash_update(result_ht, Z_STR(key), val);
 					zval_ptr_dtor_str(&key);
@@ -6718,7 +6718,7 @@ ZEND_VM_HANDLER(75, ZEND_UNSET_DIM, VAR|CV, CONST|TMPVAR|CV)
 	USE_OPLINE
 	zval *container;
 	zval *offset;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zend_string *key;
 
 	SAVE_OPLINE();
@@ -7529,7 +7529,7 @@ ZEND_VM_COLD_CONSTCONST_HANDLER(115, ZEND_ISSET_ISEMPTY_DIM_OBJ, CONST|TMPVAR|CV
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();

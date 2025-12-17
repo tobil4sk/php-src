@@ -783,7 +783,7 @@ static zend_always_inline Bucket *zend_hash_find_bucket(const HashTable *ht, con
 	}
 }
 
-static zend_always_inline Bucket *zend_hash_str_find_bucket(const HashTable *ht, const char *str, size_t len, zend_ulong h)
+static zend_always_inline Bucket *zend_hash_str_find_bucket(const HashTable *ht, const char *str, size_t len, HT_KEY_TYPE h)
 {
 	uint32_t nIndex;
 	uint32_t idx;
@@ -805,7 +805,7 @@ static zend_always_inline Bucket *zend_hash_str_find_bucket(const HashTable *ht,
 	return NULL;
 }
 
-static zend_always_inline Bucket *zend_hash_index_find_bucket(const HashTable *ht, zend_ulong h)
+static zend_always_inline Bucket *zend_hash_index_find_bucket(const HashTable *ht, HT_KEY_TYPE h)
 {
 	uint32_t nIndex;
 	uint32_t idx;
@@ -827,7 +827,7 @@ static zend_always_inline Bucket *zend_hash_index_find_bucket(const HashTable *h
 
 static zend_always_inline zval *_zend_hash_add_or_update_i(HashTable *ht, zend_string *key, zval *pData, uint32_t flag)
 {
-	zend_ulong h;
+	HT_KEY_TYPE h;
 	uint32_t nIndex;
 	uint32_t idx;
 	Bucket *p, *arData;
@@ -906,7 +906,7 @@ add_to_hash:
 	return &p->val;
 }
 
-static zend_always_inline zval *_zend_hash_str_add_or_update_i(HashTable *ht, const char *str, size_t len, zend_ulong h, zval *pData, uint32_t flag)
+static zend_always_inline zval *_zend_hash_str_add_or_update_i(HashTable *ht, const char *str, size_t len, HT_KEY_TYPE h, zval *pData, uint32_t flag)
 {
 	zend_string *key;
 	uint32_t nIndex;
@@ -1041,33 +1041,33 @@ ZEND_API zval* ZEND_FASTCALL zend_hash_str_add_or_update(HashTable *ht, const ch
 
 ZEND_API zval* ZEND_FASTCALL zend_hash_str_update(HashTable *ht, const char *str, size_t len, zval *pData)
 {
-	zend_ulong h = zend_hash_func(str, len);
+	HT_KEY_TYPE h = zend_hash_func(str, len);
 
 	return _zend_hash_str_add_or_update_i(ht, str, len, h, pData, HASH_UPDATE);
 }
 
 ZEND_API zval* ZEND_FASTCALL zend_hash_str_update_ind(HashTable *ht, const char *str, size_t len, zval *pData)
 {
-	zend_ulong h = zend_hash_func(str, len);
+	HT_KEY_TYPE h = zend_hash_func(str, len);
 
 	return _zend_hash_str_add_or_update_i(ht, str, len, h, pData, HASH_UPDATE | HASH_UPDATE_INDIRECT);
 }
 
 ZEND_API zval* ZEND_FASTCALL zend_hash_str_add(HashTable *ht, const char *str, size_t len, zval *pData)
 {
-	zend_ulong h = zend_hash_func(str, len);
+	HT_KEY_TYPE h = zend_hash_func(str, len);
 
 	return _zend_hash_str_add_or_update_i(ht, str, len, h, pData, HASH_ADD);
 }
 
 ZEND_API zval* ZEND_FASTCALL zend_hash_str_add_new(HashTable *ht, const char *str, size_t len, zval *pData)
 {
-	zend_ulong h = zend_hash_func(str, len);
+	HT_KEY_TYPE h = zend_hash_func(str, len);
 
 	return _zend_hash_str_add_or_update_i(ht, str, len, h, pData, HASH_ADD_NEW);
 }
 
-ZEND_API zval* ZEND_FASTCALL zend_hash_index_add_empty_element(HashTable *ht, zend_ulong h)
+ZEND_API zval* ZEND_FASTCALL zend_hash_index_add_empty_element(HashTable *ht, HT_KEY_TYPE h)
 {
 	zval dummy;
 
@@ -1091,7 +1091,7 @@ ZEND_API zval* ZEND_FASTCALL zend_hash_str_add_empty_element(HashTable *ht, cons
 	return zend_hash_str_add(ht, str, len, &dummy);
 }
 
-static zend_always_inline zval *_zend_hash_index_add_or_update_i(HashTable *ht, zend_ulong h, zval *pData, uint32_t flag)
+static zend_always_inline zval *_zend_hash_index_add_or_update_i(HashTable *ht, HT_KEY_TYPE h, zval *pData, uint32_t flag)
 {
 	uint32_t nIndex;
 	uint32_t idx;
@@ -1199,7 +1199,7 @@ convert_to_hash:
 	return &p->val;
 }
 
-ZEND_API zval* ZEND_FASTCALL zend_hash_index_add_or_update(HashTable *ht, zend_ulong h, zval *pData, uint32_t flag)
+ZEND_API zval* ZEND_FASTCALL zend_hash_index_add_or_update(HashTable *ht, HT_KEY_TYPE h, zval *pData, uint32_t flag)
 {
 	if (flag == HASH_ADD) {
 		return zend_hash_index_add(ht, h, pData);
@@ -1217,17 +1217,17 @@ ZEND_API zval* ZEND_FASTCALL zend_hash_index_add_or_update(HashTable *ht, zend_u
 	}
 }
 
-ZEND_API zval* ZEND_FASTCALL zend_hash_index_add(HashTable *ht, zend_ulong h, zval *pData)
+ZEND_API zval* ZEND_FASTCALL zend_hash_index_add(HashTable *ht, HT_KEY_TYPE h, zval *pData)
 {
 	return _zend_hash_index_add_or_update_i(ht, h, pData, HASH_ADD);
 }
 
-ZEND_API zval* ZEND_FASTCALL zend_hash_index_add_new(HashTable *ht, zend_ulong h, zval *pData)
+ZEND_API zval* ZEND_FASTCALL zend_hash_index_add_new(HashTable *ht, HT_KEY_TYPE h, zval *pData)
 {
 	return _zend_hash_index_add_or_update_i(ht, h, pData, HASH_ADD | HASH_ADD_NEW);
 }
 
-ZEND_API zval* ZEND_FASTCALL zend_hash_index_update(HashTable *ht, zend_ulong h, zval *pData)
+ZEND_API zval* ZEND_FASTCALL zend_hash_index_update(HashTable *ht, HT_KEY_TYPE h, zval *pData)
 {
 	return _zend_hash_index_add_or_update_i(ht, h, pData, HASH_UPDATE);
 }
@@ -1242,7 +1242,7 @@ ZEND_API zval* ZEND_FASTCALL zend_hash_next_index_insert_new(HashTable *ht, zval
 	return _zend_hash_index_add_or_update_i(ht, ht->nNextFreeElement, pData, HASH_ADD | HASH_ADD_NEW | HASH_ADD_NEXT);
 }
 
-ZEND_API zval* ZEND_FASTCALL zend_hash_index_lookup(HashTable *ht, zend_ulong h)
+ZEND_API zval* ZEND_FASTCALL zend_hash_index_lookup(HashTable *ht, HT_KEY_TYPE h)
 {
 	return _zend_hash_index_add_or_update_i(ht, h, NULL, HASH_LOOKUP);
 }
@@ -1544,7 +1544,7 @@ ZEND_API void ZEND_FASTCALL zend_hash_del_bucket(HashTable *ht, Bucket *p)
 
 ZEND_API zend_result ZEND_FASTCALL zend_hash_del(HashTable *ht, zend_string *key)
 {
-	zend_ulong h;
+	HT_KEY_TYPE h;
 	uint32_t nIndex;
 	uint32_t idx;
 	Bucket *p;
@@ -1576,7 +1576,7 @@ ZEND_API zend_result ZEND_FASTCALL zend_hash_del(HashTable *ht, zend_string *key
 
 ZEND_API zend_result ZEND_FASTCALL zend_hash_del_ind(HashTable *ht, zend_string *key)
 {
-	zend_ulong h;
+	HT_KEY_TYPE h;
 	uint32_t nIndex;
 	uint32_t idx;
 	Bucket *p;
@@ -1626,7 +1626,7 @@ ZEND_API zend_result ZEND_FASTCALL zend_hash_del_ind(HashTable *ht, zend_string 
 
 ZEND_API zend_result ZEND_FASTCALL zend_hash_str_del_ind(HashTable *ht, const char *str, size_t len)
 {
-	zend_ulong h;
+	HT_KEY_TYPE h;
 	uint32_t nIndex;
 	uint32_t idx;
 	Bucket *p;
@@ -1671,7 +1671,7 @@ ZEND_API zend_result ZEND_FASTCALL zend_hash_str_del_ind(HashTable *ht, const ch
 
 ZEND_API zend_result ZEND_FASTCALL zend_hash_str_del(HashTable *ht, const char *str, size_t len)
 {
-	zend_ulong h;
+	HT_KEY_TYPE h;
 	uint32_t nIndex;
 	uint32_t idx;
 	Bucket *p;
@@ -1700,7 +1700,7 @@ ZEND_API zend_result ZEND_FASTCALL zend_hash_str_del(HashTable *ht, const char *
 	return FAILURE;
 }
 
-ZEND_API zend_result ZEND_FASTCALL zend_hash_index_del(HashTable *ht, zend_ulong h)
+ZEND_API zend_result ZEND_FASTCALL zend_hash_index_del(HashTable *ht, HT_KEY_TYPE h)
 {
 	uint32_t nIndex;
 	uint32_t idx;
@@ -2649,7 +2649,7 @@ ZEND_API void ZEND_FASTCALL zend_hash_merge(HashTable *target, const HashTable *
 }
 
 
-static bool ZEND_FASTCALL zend_hash_replace_checker_wrapper(HashTable *target, zval *source_data, zend_ulong h, zend_string *key, void *pParam, merge_checker_func_t merge_checker_func)
+static bool ZEND_FASTCALL zend_hash_replace_checker_wrapper(HashTable *target, zval *source_data, HT_KEY_TYPE h, zend_string *key, void *pParam, merge_checker_func_t merge_checker_func)
 {
 	zend_hash_key hash_key;
 
@@ -2707,7 +2707,7 @@ ZEND_API zval* ZEND_FASTCALL zend_hash_find_known_hash(const HashTable *ht, cons
 
 ZEND_API zval* ZEND_FASTCALL zend_hash_str_find(const HashTable *ht, const char *str, size_t len)
 {
-	zend_ulong h;
+	HT_KEY_TYPE h;
 	Bucket *p;
 
 	IS_CONSISTENT(ht);
@@ -2717,7 +2717,7 @@ ZEND_API zval* ZEND_FASTCALL zend_hash_str_find(const HashTable *ht, const char 
 	return p ? &p->val : NULL;
 }
 
-ZEND_API zval* ZEND_FASTCALL zend_hash_index_find(const HashTable *ht, zend_ulong h)
+ZEND_API zval* ZEND_FASTCALL zend_hash_index_find(const HashTable *ht, HT_KEY_TYPE h)
 {
 	Bucket *p;
 
@@ -2738,7 +2738,7 @@ ZEND_API zval* ZEND_FASTCALL zend_hash_index_find(const HashTable *ht, zend_ulon
 	return p ? &p->val : NULL;
 }
 
-ZEND_API zval* ZEND_FASTCALL _zend_hash_index_find(const HashTable *ht, zend_ulong h)
+ZEND_API zval* ZEND_FASTCALL _zend_hash_index_find(const HashTable *ht, HT_KEY_TYPE h)
 {
 	Bucket *p;
 
@@ -2862,7 +2862,7 @@ ZEND_API zend_result ZEND_FASTCALL zend_hash_move_backwards_ex(const HashTable *
 
 
 /* This function should be made binary safe  */
-ZEND_API zend_hash_key_type ZEND_FASTCALL zend_hash_get_current_key_ex(const HashTable *ht, zend_string **str_index, zend_ulong *num_index, const HashPosition *pos)
+ZEND_API zend_hash_key_type ZEND_FASTCALL zend_hash_get_current_key_ex(const HashTable *ht, zend_string **str_index, HT_KEY_TYPE *num_index, const HashPosition *pos)
 {
 	uint32_t idx;
 	Bucket *p;
@@ -2952,7 +2952,7 @@ ZEND_API zval* ZEND_FASTCALL zend_hash_get_current_data_ex(const HashTable *ht, 
 ZEND_API void zend_hash_bucket_swap(Bucket *p, Bucket *q)
 {
 	zval val;
-	zend_ulong h;
+	HT_KEY_TYPE h;
 	zend_string *key;
 
 	val = p->val;
@@ -2980,7 +2980,7 @@ ZEND_API void zend_hash_bucket_renum_swap(Bucket *p, Bucket *q)
 ZEND_API void zend_hash_bucket_packed_swap(Bucket *p, Bucket *q)
 {
 	zval val;
-	zend_ulong h;
+	HT_KEY_TYPE h;
 
 	val = p->val;
 	h = p->h;
@@ -3114,7 +3114,7 @@ ZEND_API void ZEND_FASTCALL zend_array_sort_ex(HashTable *ht, sort_func_t sort, 
 static zend_always_inline int zend_hash_compare_impl(const HashTable *ht1, const HashTable *ht2, compare_func_t compar, bool ordered) {
 	uint32_t idx1, idx2;
 	zend_string *key1, *key2;
-	zend_ulong h1, h2;
+	HT_KEY_TYPE h1, h2;
 	zval *pData1, *pData2;;
 	int result;
 
@@ -3307,7 +3307,7 @@ ZEND_API zval* ZEND_FASTCALL zend_hash_minmax(const HashTable *ht, compare_func_
 	return res;
 }
 
-ZEND_API bool ZEND_FASTCALL _zend_handle_numeric_str_ex(const char *key, size_t length, zend_ulong *idx)
+ZEND_API bool ZEND_FASTCALL _zend_handle_numeric_str_ex(const char *key, size_t length, HT_KEY_TYPE *idx)
 {
 	const char *tmp = key;
 
@@ -3352,7 +3352,7 @@ ZEND_API bool ZEND_FASTCALL _zend_handle_numeric_str_ex(const char *key, size_t 
  */
 ZEND_API HashTable* ZEND_FASTCALL zend_symtable_to_proptable(HashTable *ht)
 {
-	zend_ulong num_key;
+	HT_KEY_TYPE num_key;
 	zend_string *str_key;
 	zval *zv;
 
@@ -3405,7 +3405,7 @@ convert:
  */
 ZEND_API HashTable* ZEND_FASTCALL zend_proptable_to_symtable(HashTable *ht, bool always_duplicate)
 {
-	zend_ulong num_key;
+	HT_KEY_TYPE num_key;
 	zend_string *str_key;
 	zval *zv;
 

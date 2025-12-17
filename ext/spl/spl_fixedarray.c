@@ -320,7 +320,7 @@ static zend_never_inline zend_ulong spl_offset_convert_to_ulong_slow(const zval 
 	try_again:
 	switch (Z_TYPE_P(offset)) {
 		case IS_STRING: {
-			zend_ulong index;
+			HT_KEY_TYPE index;
 			if (ZEND_HANDLE_NUMERIC(Z_STR_P(offset), index)) {
 				return index;
 			}

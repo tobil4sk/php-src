@@ -73,7 +73,7 @@ PHPAPI void php_register_known_variable(const char *var_name, size_t var_name_le
 	ZEND_ASSERT(!(var_name_len == strlen("this") && !memcmp(var_name, "this", strlen("this"))));
 
 	/* Assert that the variable name is not numeric */
-	zend_ulong idx;
+	HT_KEY_TYPE idx;
 	ZEND_ASSERT(!ZEND_HANDLE_NUMERIC_STR(var_name, var_name_len, idx));
 	/* ensure that we don't have null bytes, spaces, dots, or array bracket in the variable name (not binary safe) */
 	const char *p = var_name;
@@ -307,7 +307,7 @@ plain_var:
 				return;
 			}
 
-			zend_ulong idx;
+			HT_KEY_TYPE idx;
 
 			/*
 			 * According to rfc2965, more specific paths are listed above the less specific ones.
@@ -606,7 +606,7 @@ static zend_always_inline void import_environment_variable(HashTable *ht, char *
 	char *p;
 	size_t name_len, len;
 	zval val;
-	zend_ulong idx;
+	HT_KEY_TYPE idx;
 
 	p = strchr(env, '=');
 	if (!p
