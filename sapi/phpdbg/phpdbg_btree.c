@@ -37,7 +37,7 @@ void phpdbg_btree_init(phpdbg_btree *tree, zend_ulong depth) {
 	tree->count = 0;
 }
 
-phpdbg_btree_result *phpdbg_btree_find(phpdbg_btree *tree, zend_ulong idx) {
+phpdbg_btree_result *phpdbg_btree_find(phpdbg_btree *tree, HT_KEY_TYPE idx) {
 	phpdbg_btree_branch *branch = tree->branch;
 	int i = tree->depth - 1;
 
@@ -64,7 +64,7 @@ phpdbg_btree_result *phpdbg_btree_find(phpdbg_btree *tree, zend_ulong idx) {
 	return &branch->result;
 }
 
-phpdbg_btree_result *phpdbg_btree_find_closest(phpdbg_btree *tree, zend_ulong idx) {
+phpdbg_btree_result *phpdbg_btree_find_closest(phpdbg_btree *tree, HT_KEY_TYPE idx) {
 	phpdbg_btree_branch *branch = tree->branch;
 	int i = tree->depth - 1, last_superior_i = -1;
 
@@ -119,7 +119,7 @@ phpdbg_btree_result *phpdbg_btree_find_closest(phpdbg_btree *tree, zend_ulong id
 	return &branch->result;
 }
 
-phpdbg_btree_position phpdbg_btree_find_between(phpdbg_btree *tree, zend_ulong lower_idx, zend_ulong higher_idx) {
+phpdbg_btree_position phpdbg_btree_find_between(phpdbg_btree *tree, HT_KEY_TYPE lower_idx, HT_KEY_TYPE higher_idx) {
 	phpdbg_btree_position pos;
 
 	pos.tree = tree;
@@ -141,7 +141,7 @@ phpdbg_btree_result *phpdbg_btree_next(phpdbg_btree_position *pos) {
 	return result;
 }
 
-int phpdbg_btree_insert_or_update(phpdbg_btree *tree, zend_ulong idx, void *ptr, int flags) {
+int phpdbg_btree_insert_or_update(phpdbg_btree *tree, HT_KEY_TYPE idx, void *ptr, int flags) {
 	int i = tree->depth - 1;
 	phpdbg_btree_branch **branch = &tree->branch;
 
@@ -176,7 +176,7 @@ int phpdbg_btree_insert_or_update(phpdbg_btree *tree, zend_ulong idx, void *ptr,
 	return SUCCESS;
 }
 
-int phpdbg_btree_delete(phpdbg_btree *tree, zend_ulong idx) {
+int phpdbg_btree_delete(phpdbg_btree *tree, HT_KEY_TYPE idx) {
 	int i = tree->depth;
 	phpdbg_btree_branch *branch = tree->branch;
 	int i_last_dual_branch = -1, last_dual_branch_branch;

@@ -2476,7 +2476,7 @@ static zend_always_inline zval *zend_fetch_dimension_address_inner(HashTable *ht
 {
 	zval *retval = NULL;
 	zend_string *offset_key;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 
 try_again:
 	if (EXPECTED(Z_TYPE_P(dim) == IS_LONG)) {
@@ -3012,7 +3012,7 @@ str_offset:
 static zend_never_inline bool ZEND_FASTCALL zend_array_key_exists_fast(HashTable *ht, zval *key OPLINE_DC EXECUTE_DATA_DC)
 {
 	zend_string *str;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 
 try_again:
 	if (EXPECTED(Z_TYPE_P(key) == IS_STRING)) {
