@@ -5112,7 +5112,7 @@ ZEND_API zend_result zend_get_default_from_internal_arg_info(
 
 	/* Avoid going through the full AST machinery for some simple and common cases. */
 	size_t default_value_len = strlen(default_value);
-	zend_ulong lval;
+	HT_KEY_TYPE lval;
 	if (default_value_len == sizeof("null")-1
 			&& !memcmp(default_value, "null", sizeof("null")-1)) {
 		ZVAL_NULL(default_value_zval);

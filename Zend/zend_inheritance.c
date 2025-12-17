@@ -2674,13 +2674,13 @@ static void variance_obligation_ht_dtor(zval *zv) {
 
 static HashTable *get_or_init_obligations_for_class(zend_class_entry *ce) {
 	HashTable *ht;
-	zend_ulong key;
+	HT_KEY_TYPE key;
 	if (!CG(delayed_variance_obligations)) {
 		ALLOC_HASHTABLE(CG(delayed_variance_obligations));
 		zend_hash_init(CG(delayed_variance_obligations), 0, NULL, variance_obligation_ht_dtor, 0);
 	}
 
-	key = (zend_ulong) (uintptr_t) ce;
+	key = (HT_KEY_TYPE) (uintptr_t) ce;
 	ht = zend_hash_index_find_ptr(CG(delayed_variance_obligations), key);
 	if (ht) {
 		return ht;
@@ -2799,7 +2799,7 @@ static void load_delayed_classes(zend_class_entry *ce) {
 	 * if the new class is lower in the hierarchy than the current one. */
 	HashPosition pos = 0;
 	zend_string *name;
-	zend_ulong idx;
+	HT_KEY_TYPE idx;
 	while (zend_hash_get_current_key_ex(delayed_autoloads, &name, &idx, &pos)
 			!= HASH_KEY_NON_EXISTENT) {
 		zend_string_addref(name);
@@ -2816,7 +2816,7 @@ static void load_delayed_classes(zend_class_entry *ce) {
 
 static void resolve_delayed_variance_obligations(zend_class_entry *ce) {
 	HashTable *all_obligations = CG(delayed_variance_obligations), *obligations;
-	zend_ulong num_key = (zend_ulong) (uintptr_t) ce;
+	HT_KEY_TYPE num_key = (HT_KEY_TYPE) (uintptr_t) ce;
 
 	ZEND_ASSERT(all_obligations != NULL);
 	obligations = zend_hash_index_find_ptr(all_obligations, num_key);

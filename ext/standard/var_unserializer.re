@@ -481,7 +481,7 @@ static zend_always_inline int process_nested_array_data(UNSERIALIZE_PARAMETER, H
 
 	while (elements-- > 0) {
 		zval key, *data;
-		zend_ulong idx;
+		HT_KEY_TYPE idx;
 
 		ZVAL_UNDEF(&key);
 

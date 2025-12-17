@@ -245,7 +245,7 @@ static zend_object *spl_array_object_clone(zend_object *old_object)
 
 typedef struct {
 	zend_string *key;
-	zend_ulong h;
+	HT_KEY_TYPE h;
 	bool release_key;
 } spl_hash_key;
 
@@ -908,7 +908,7 @@ static int spl_array_compare_objects(zval *o1, zval *o2) /* {{{ */
 static zend_result spl_array_skip_protected(spl_array_object *intern, HashTable *aht) /* {{{ */
 {
 	zend_string *string_key;
-	zend_ulong num_key;
+	HT_KEY_TYPE num_key;
 	zval *data;
 
 	if (spl_array_is_object(intern)) {
