@@ -91,7 +91,7 @@ static ssize_t phar_dir_read(php_stream *stream, char *buf, size_t count) /* {{{
 {
 	HashTable *data = (HashTable *)stream->abstract;
 	zend_string *str_key;
-	zend_ulong unused;
+	HT_KEY_TYPE unused;
 
 	if (count != sizeof(php_stream_dirent)) {
 		return -1;

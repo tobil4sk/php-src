@@ -22,7 +22,7 @@
 #include "zend.h"
 
 typedef struct {
-	zend_ulong idx;
+	HT_KEY_TYPE idx;
 	void *ptr;
 } phpdbg_btree_result;
 
@@ -47,17 +47,17 @@ typedef struct {
 
 void phpdbg_btree_init(phpdbg_btree *tree, zend_ulong depth);
 void phpdbg_btree_clean(phpdbg_btree *tree);
-phpdbg_btree_result *phpdbg_btree_find(phpdbg_btree *tree, zend_ulong idx);
-phpdbg_btree_result *phpdbg_btree_find_closest(phpdbg_btree *tree, zend_ulong idx);
-phpdbg_btree_position phpdbg_btree_find_between(phpdbg_btree *tree, zend_ulong lower_idx, zend_ulong higher_idx);
+phpdbg_btree_result *phpdbg_btree_find(phpdbg_btree *tree, HT_KEY_TYPE idx);
+phpdbg_btree_result *phpdbg_btree_find_closest(phpdbg_btree *tree, HT_KEY_TYPE idx);
+phpdbg_btree_position phpdbg_btree_find_between(phpdbg_btree *tree, HT_KEY_TYPE lower_idx, HT_KEY_TYPE higher_idx);
 phpdbg_btree_result *phpdbg_btree_next(phpdbg_btree_position *pos);
-int phpdbg_btree_delete(phpdbg_btree *tree, zend_ulong idx);
+int phpdbg_btree_delete(phpdbg_btree *tree, HT_KEY_TYPE idx);
 
 #define PHPDBG_BTREE_INSERT 1
 #define PHPDBG_BTREE_UPDATE 2
 #define PHPDBG_BTREE_OVERWRITE (PHPDBG_BTREE_INSERT | PHPDBG_BTREE_UPDATE)
 
-int phpdbg_btree_insert_or_update(phpdbg_btree *tree, zend_ulong idx, void *ptr, int flags);
+int phpdbg_btree_insert_or_update(phpdbg_btree *tree, HT_KEY_TYPE idx, void *ptr, int flags);
 #define phpdbg_btree_insert(tree, idx, ptr) phpdbg_btree_insert_or_update(tree, idx, ptr, PHPDBG_BTREE_INSERT)
 #define phpdbg_btree_update(tree, idx, ptr) phpdbg_btree_insert_or_update(tree, idx, ptr, PHPDBG_BTREE_UPDATE)
 #define phpdbg_btree_overwrite(tree, idx, ptr) phpdbg_btree_insert_or_update(tree, idx, ptr, PHPDBG_BTREE_OVERWRITE)
