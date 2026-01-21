@@ -1258,6 +1258,16 @@ static zend_always_inline int zend_mm_small_size_to_bit(int size)
 # define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #endif
 
+#if ZEND_MM_MIN_SMALL_SIZE == 16
+# define ZEND_MM_MIN_SMALL_SIZE_LOG2 4
+# define ZEND_MM_MAX_EVENLY_SPACED_BIN 128
+#elif ZEND_MM_MIN_SMALL_SIZE == 8
+# define ZEND_MM_MAX_EVENLY_SPACED_BIN 64
+# define ZEND_MM_MIN_SMALL_SIZE_LOG2 3
+#else
+# error Unsupported ZEND_MM_MIN_SMALL_SIZE value
+#endif
+
 static zend_always_inline int zend_mm_small_size_to_bin(size_t size)
 {
 #if 0
@@ -1272,14 +1282,14 @@ static zend_always_inline int zend_mm_small_size_to_bin(size_t size)
 #else
 	unsigned int t1, t2;
 
-	if (size <= 64) {
+	if (size <= ZEND_MM_MAX_EVENLY_SPACED_BIN) {
 		/* we need to support size == 0 ... */
-		return (size - !!size) >> 3;
+		return (size - !!size) >> ZEND_MM_MIN_SMALL_SIZE_LOG2;
 	} else {
 		t1 = size - 1;
 		t2 = zend_mm_small_size_to_bit(t1) - 3;
 		t1 = t1 >> t2;
-		t2 = t2 - 3;
+		t2 = t2 - ZEND_MM_MIN_SMALL_SIZE_LOG2;
 		t2 = t2 << 2;
 		return (int)(t1 + t2);
 	}
