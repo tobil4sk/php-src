@@ -3107,7 +3107,8 @@ ZEND_API char* ZEND_FASTCALL zend_str_tolower_dup_ex(const char *source, size_t 
 			if (p != (const unsigned char*)source) {
 				memcpy(res, source, p - (const unsigned char*)source);
 			}
-			r = (unsigned char*)p + (res - source);
+
+			r = (unsigned char*)res + (p - (unsigned char*)source);
 			zend_str_tolower_impl((char *)r, (const char*)p, end - p);
 			res[length] = '\0';
 			return res;
