@@ -2555,7 +2555,7 @@ send_again:
 
 						name = Z_STR_P(&key);
 
-						zend_ulong tmp;
+						HT_KEY_TYPE tmp;
 						if (ZEND_HANDLE_NUMERIC(name, tmp)) {
 							name = NULL;
 						}
@@ -2946,7 +2946,7 @@ add_unpack_again:
 				ZVAL_DEREF(val);
 				Z_TRY_ADDREF_P(val);
 
-				zend_ulong num_key;
+				HT_KEY_TYPE num_key;
 				if (Z_TYPE(key) == IS_STRING && !ZEND_HANDLE_NUMERIC(Z_STR(key), num_key)) {
 					zend_hash_update(result_ht, Z_STR(key), val);
 					zval_ptr_dtor_str(&key);
@@ -7925,7 +7925,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if (IS_CONST != IS_UNUSED) {
 		zval *offset = RT_CONSTANT(opline, opline->op2);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -8006,7 +8006,7 @@ static ZEND_VM_COLD ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -10404,7 +10404,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if ((IS_TMP_VAR|IS_VAR) != IS_UNUSED) {
 		zval *offset = _get_zval_ptr_var(opline->op2.var EXECUTE_DATA_CC);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -10484,7 +10484,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ISSET_ISEMPTY
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -11345,7 +11345,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if (IS_UNUSED != IS_UNUSED) {
 		zval *offset = NULL;
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -12960,7 +12960,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if (IS_CV != IS_UNUSED) {
 		zval *offset = EX_VAR(opline->op2.var);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -13041,7 +13041,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ISSET_ISEMPTY
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -17318,7 +17318,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ISSET_ISEMPTY
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -18789,7 +18789,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ISSET_ISEMPTY
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -20213,7 +20213,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ISSET_ISEMPTY
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -21262,7 +21262,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if (IS_CONST != IS_UNUSED) {
 		zval *offset = RT_CONSTANT(opline, opline->op2);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -21706,7 +21706,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if ((IS_TMP_VAR|IS_VAR) != IS_UNUSED) {
 		zval *offset = _get_zval_ptr_var(opline->op2.var EXECUTE_DATA_CC);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -22164,7 +22164,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if (IS_UNUSED != IS_UNUSED) {
 		zval *offset = NULL;
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -22571,7 +22571,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if (IS_CV != IS_UNUSED) {
 		zval *offset = EX_VAR(opline->op2.var);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -26514,7 +26514,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if (IS_CONST != IS_UNUSED) {
 		zval *offset = RT_CONSTANT(opline, opline->op2);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -26595,7 +26595,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_UNSET_DIM_SPE
 	USE_OPLINE
 	zval *container;
 	zval *offset;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zend_string *key;
 
 	SAVE_OPLINE();
@@ -29066,7 +29066,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if ((IS_TMP_VAR|IS_VAR) != IS_UNUSED) {
 		zval *offset = _get_zval_ptr_var(opline->op2.var EXECUTE_DATA_CC);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -29146,7 +29146,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_UNSET_DIM_SPE
 	USE_OPLINE
 	zval *container;
 	zval *offset;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zend_string *key;
 
 	SAVE_OPLINE();
@@ -31172,7 +31172,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if (IS_UNUSED != IS_UNUSED) {
 		zval *offset = NULL;
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -33594,7 +33594,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if (IS_CV != IS_UNUSED) {
 		zval *offset = EX_VAR(opline->op2.var);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -33675,7 +33675,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_UNSET_DIM_SPE
 	USE_OPLINE
 	zval *container;
 	zval *offset;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zend_string *key;
 
 	SAVE_OPLINE();
@@ -46108,7 +46108,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if (IS_CONST != IS_UNUSED) {
 		zval *offset = RT_CONSTANT(opline, opline->op2);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -46189,7 +46189,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_UNSET_DIM_SPE
 	USE_OPLINE
 	zval *container;
 	zval *offset;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zend_string *key;
 
 	SAVE_OPLINE();
@@ -46338,7 +46338,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ISSET_ISEMPTY
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -49948,7 +49948,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if ((IS_TMP_VAR|IS_VAR) != IS_UNUSED) {
 		zval *offset = _get_zval_ptr_var(opline->op2.var EXECUTE_DATA_CC);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -50028,7 +50028,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_UNSET_DIM_SPE
 	USE_OPLINE
 	zval *container;
 	zval *offset;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zend_string *key;
 
 	SAVE_OPLINE();
@@ -50177,7 +50177,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ISSET_ISEMPTY
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -51972,7 +51972,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if (IS_UNUSED != IS_UNUSED) {
 		zval *offset = NULL;
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -55706,7 +55706,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ADD_ARRAY_ELE
 	if (IS_CV != IS_UNUSED) {
 		zval *offset = EX_VAR(opline->op2.var);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -55787,7 +55787,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_UNSET_DIM_SPE
 	USE_OPLINE
 	zval *container;
 	zval *offset;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zend_string *key;
 
 	SAVE_OPLINE();
@@ -55936,7 +55936,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_FUNC_CCONV ZEND_ISSET_ISEMPTY
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -58084,7 +58084,7 @@ send_again:
 
 						name = Z_STR_P(&key);
 
-						zend_ulong tmp;
+						HT_KEY_TYPE tmp;
 						if (ZEND_HANDLE_NUMERIC(name, tmp)) {
 							name = NULL;
 						}
@@ -58446,7 +58446,7 @@ add_unpack_again:
 				ZVAL_DEREF(val);
 				Z_TRY_ADDREF_P(val);
 
-				zend_ulong num_key;
+				HT_KEY_TYPE num_key;
 				if (Z_TYPE(key) == IS_STRING && !ZEND_HANDLE_NUMERIC(Z_STR(key), num_key)) {
 					zend_hash_update(result_ht, Z_STR(key), val);
 					zval_ptr_dtor_str(&key);
@@ -63349,7 +63349,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if (IS_CONST != IS_UNUSED) {
 		zval *offset = RT_CONSTANT(opline, opline->op2);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -63430,7 +63430,7 @@ static ZEND_VM_COLD ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ISSET
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -65828,7 +65828,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if ((IS_TMP_VAR|IS_VAR) != IS_UNUSED) {
 		zval *offset = _get_zval_ptr_var(opline->op2.var EXECUTE_DATA_CC);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -65908,7 +65908,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ISSET_ISEMPTY_DIM_
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -66667,7 +66667,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if (IS_UNUSED != IS_UNUSED) {
 		zval *offset = NULL;
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -68282,7 +68282,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if (IS_CV != IS_UNUSED) {
 		zval *offset = EX_VAR(opline->op2.var);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -68363,7 +68363,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ISSET_ISEMPTY_DIM_
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -72640,7 +72640,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ISSET_ISEMPTY_DIM_
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -74111,7 +74111,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ISSET_ISEMPTY_DIM_
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -75435,7 +75435,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ISSET_ISEMPTY_DIM_
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -76484,7 +76484,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if (IS_CONST != IS_UNUSED) {
 		zval *offset = RT_CONSTANT(opline, opline->op2);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -76928,7 +76928,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if ((IS_TMP_VAR|IS_VAR) != IS_UNUSED) {
 		zval *offset = _get_zval_ptr_var(opline->op2.var EXECUTE_DATA_CC);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -77386,7 +77386,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if (IS_UNUSED != IS_UNUSED) {
 		zval *offset = NULL;
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -77793,7 +77793,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if (IS_CV != IS_UNUSED) {
 		zval *offset = EX_VAR(opline->op2.var);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -81736,7 +81736,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if (IS_CONST != IS_UNUSED) {
 		zval *offset = RT_CONSTANT(opline, opline->op2);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -81817,7 +81817,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_UNSET_DIM_SPEC_VAR
 	USE_OPLINE
 	zval *container;
 	zval *offset;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zend_string *key;
 
 	SAVE_OPLINE();
@@ -84288,7 +84288,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if ((IS_TMP_VAR|IS_VAR) != IS_UNUSED) {
 		zval *offset = _get_zval_ptr_var(opline->op2.var EXECUTE_DATA_CC);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -84368,7 +84368,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_UNSET_DIM_SPEC_VAR
 	USE_OPLINE
 	zval *container;
 	zval *offset;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zend_string *key;
 
 	SAVE_OPLINE();
@@ -86394,7 +86394,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if (IS_UNUSED != IS_UNUSED) {
 		zval *offset = NULL;
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -88816,7 +88816,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if (IS_CV != IS_UNUSED) {
 		zval *offset = EX_VAR(opline->op2.var);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -88897,7 +88897,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_UNSET_DIM_SPEC_VAR
 	USE_OPLINE
 	zval *container;
 	zval *offset;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zend_string *key;
 
 	SAVE_OPLINE();
@@ -101330,7 +101330,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if (IS_CONST != IS_UNUSED) {
 		zval *offset = RT_CONSTANT(opline, opline->op2);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -101411,7 +101411,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_UNSET_DIM_SPEC_CV_
 	USE_OPLINE
 	zval *container;
 	zval *offset;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zend_string *key;
 
 	SAVE_OPLINE();
@@ -101560,7 +101560,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ISSET_ISEMPTY_DIM_
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -105170,7 +105170,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if ((IS_TMP_VAR|IS_VAR) != IS_UNUSED) {
 		zval *offset = _get_zval_ptr_var(opline->op2.var EXECUTE_DATA_CC);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -105250,7 +105250,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_UNSET_DIM_SPEC_CV_
 	USE_OPLINE
 	zval *container;
 	zval *offset;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zend_string *key;
 
 	SAVE_OPLINE();
@@ -105399,7 +105399,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ISSET_ISEMPTY_DIM_
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
@@ -107092,7 +107092,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if (IS_UNUSED != IS_UNUSED) {
 		zval *offset = NULL;
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -110826,7 +110826,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ADD_ARRAY_ELEMENT_
 	if (IS_CV != IS_UNUSED) {
 		zval *offset = EX_VAR(opline->op2.var);
 		zend_string *str;
-		zend_ulong hval;
+		HT_KEY_TYPE hval;
 
 add_again:
 		if (EXPECTED(Z_TYPE_P(offset) == IS_STRING)) {
@@ -110907,7 +110907,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_UNSET_DIM_SPEC_CV_
 	USE_OPLINE
 	zval *container;
 	zval *offset;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zend_string *key;
 
 	SAVE_OPLINE();
@@ -111056,7 +111056,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_OPCODE_HANDLER_CCONV ZEND_ISSET_ISEMPTY_DIM_
 	USE_OPLINE
 	zval *container;
 	bool result;
-	zend_ulong hval;
+	HT_KEY_TYPE hval;
 	zval *offset;
 
 	SAVE_OPLINE();
