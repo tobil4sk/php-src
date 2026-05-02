@@ -375,6 +375,9 @@ struct _zend_mm_huge_list {
 	void              *ptr;
 	size_t             size;
 	zend_mm_huge_list *next;
+#ifdef __CHERI_PURE_CAPABILITY__
+	void		  *extendible;
+#endif
 #if ZEND_DEBUG
 	zend_mm_debug_info dbg;
 #endif
@@ -757,9 +760,23 @@ static zend_always_inline void zend_mm_hugepage(void* ptr, size_t size)
 #endif
 }
 
+
+#ifdef __CHERI_PURE_CAPABILITY__
+/*
+ * Current chunk extension code doesn't work well with cheri purecap,
+ * so just map a larger region in advance.
+ * */
+# define CHUNK_PREALLOCATE_FACTOR 64
+#endif
+
 static void *zend_mm_chunk_alloc_int(size_t size, size_t alignment)
 {
+#ifdef __CHERI_PURE_CAPABILITY__
+	/* With cheri capabilities, we cannot extend, so preallocate a larger map */
+	void *ptr = zend_mm_mmap(size * CHUNK_PREALLOCATE_FACTOR);
+#else
 	void *ptr = zend_mm_mmap(size);
+#endif
 
 	if (ptr == NULL) {
 		return NULL;
@@ -776,7 +793,11 @@ static void *zend_mm_chunk_alloc_int(size_t size, size_t alignment)
 
 		/* chunk has to be aligned */
 		zend_mm_munmap(ptr, size);
+#ifdef __CHERI_PURE_CAPABILITY__
+		ptr = zend_mm_mmap(CHUNK_PREALLOCATE_FACTOR * size + alignment - REAL_PAGE_SIZE);
+#else
 		ptr = zend_mm_mmap(size + alignment - REAL_PAGE_SIZE);
+#endif
 #ifdef _WIN32
 		offset = ZEND_MM_ALIGNED_OFFSET(ptr, alignment);
 		if (offset != 0) {
@@ -863,14 +884,17 @@ static int zend_mm_chunk_truncate(zend_mm_heap *heap, void *addr, size_t old_siz
 #endif
 }
 
-static int zend_mm_chunk_extend(zend_mm_heap *heap, void *addr, size_t old_size, size_t new_size)
+static void* zend_mm_chunk_extend(zend_mm_heap *heap, void *addr, size_t old_size, size_t new_size)
 {
 #if ZEND_MM_STORAGE
 	if (UNEXPECTED(heap->storage)) {
 		if (heap->storage->handlers.chunk_extend) {
-			return heap->storage->handlers.chunk_extend(heap->storage, addr, old_size, new_size);
+#ifdef __CHERI_PURE_CAPABILITY__
+			fprintf(stderr, "Custom chunk_extend handler is not supported on pure capability CHERI");
+#endif
+			return heap->storage->handlers.chunk_extend(heap->storage, addr, old_size, new_size) ? addr : NULL;
 		} else {
-			return 0;
+			return NULL;
 		}
 	}
 #endif
@@ -878,16 +902,31 @@ static int zend_mm_chunk_extend(zend_mm_heap *heap, void *addr, size_t old_size,
 	/* We don't use MREMAP_MAYMOVE due to alignment requirements. */
 	void *ptr = mremap(addr, old_size, new_size, 0);
 	if (ptr == MAP_FAILED) {
-		return 0;
+		return NULL;
 	}
 	/* Sanity check: The mapping shouldn't have moved. */
 	ZEND_ASSERT(ptr == addr);
-	return 1;
+	return ptr;
 #elif !defined(_WIN32)
-	return (zend_mm_mmap_fixed((char*)addr + old_size, new_size - old_size) != NULL);
-#else
-	return 0;
+# ifdef __CHERI_PURE_CAPABILITY__
+	for (zend_mm_huge_list *huge = heap->huge_list; huge != NULL; huge = huge->next) {
+		char *base = (char *)huge->ptr;
+		char *end  = base + cheri_length_get(base);
+		char *p    = (char *)addr;
+		if (p >= base && p < end) {
+			addr = cheri_address_set(huge->extendible, cheri_address_get(addr));
+		}
+	}
+# endif
+	void* extension = zend_mm_mmap_fixed((char*)addr + old_size, new_size - old_size);
+	if (extension != NULL) {
+# ifdef __CHERI_PURE_CAPABILITY__
+		addr = cheri_bounds_set(addr, new_size);
+# endif
+		return addr;
+	}
 #endif
+	return NULL;
 }
 
 static zend_always_inline void zend_mm_chunk_init(zend_mm_heap *heap, zend_mm_chunk *chunk)
@@ -1105,6 +1144,10 @@ get_chunk:
 				heap->peak_chunks_count = heap->chunks_count;
 			}
 			zend_mm_chunk_init(heap, chunk);
+#ifdef __CHERI_PURE_CAPABILITY__
+			chunk = cheri_bounds_set(chunk, ZEND_MM_CHUNK_SIZE);
+#endif
+
 			page_num = ZEND_MM_FIRST_PAGE;
 			len = ZEND_MM_PAGES - ZEND_MM_FIRST_PAGE;
 			goto found;
@@ -1771,7 +1814,9 @@ static zend_never_inline void *zend_mm_realloc_huge(zend_mm_heap *heap, void *pt
 			}
 #endif
 			/* try to map tail right after this block */
-			if (zend_mm_chunk_extend(heap, ptr, old_size, new_size)) {
+			void* extended_ptr = zend_mm_chunk_extend(heap, ptr, old_size, new_size);
+			if (extended_ptr != NULL) {
+				ptr = extended_ptr;
 #if ZEND_MM_STAT || ZEND_MM_LIMIT
 				heap->real_size += new_size - old_size;
 #endif
@@ -2015,7 +2060,12 @@ static void zend_mm_add_huge_block(zend_mm_heap *heap, void *ptr, size_t size ZE
 #endif
 {
 	zend_mm_huge_list *list = (zend_mm_huge_list*)zend_mm_alloc_heap(heap, sizeof(zend_mm_huge_list) ZEND_FILE_LINE_RELAY_CC ZEND_FILE_LINE_ORIG_RELAY_CC);
+#ifdef __CHERI_PURE_CAPABILITY__
+	list->ptr = cheri_bounds_set(ptr, size);
+	list->extendible = ptr;
+#else
 	list->ptr = ptr;
+#endif
 	list->size = size;
 	list->next = heap->huge_list;
 #if ZEND_DEBUG
@@ -2236,6 +2286,9 @@ ZEND_API void zend_mm_refresh_key_child(zend_mm_heap *heap)
 static zend_mm_heap *zend_mm_init(void)
 {
 	zend_mm_chunk *chunk = (zend_mm_chunk*)zend_mm_chunk_alloc_int(ZEND_MM_CHUNK_SIZE, ZEND_MM_CHUNK_SIZE);
+#ifdef __CHERI_PURE_CAPABILITY__
+	chunk = cheri_bounds_set(chunk, ZEND_MM_CHUNK_SIZE);
+#endif
 	zend_mm_heap *heap;
 
 	if (UNEXPECTED(chunk == NULL)) {
@@ -2666,7 +2719,11 @@ ZEND_API void zend_mm_shutdown(zend_mm_heap *heap, bool full, bool silent)
 	while (list) {
 		zend_mm_huge_list *q = list;
 		list = list->next;
+#ifdef __CHERI_PURE_CAPABILITY__
+		zend_mm_chunk_free(heap, q->extendible, q->size);
+#else
 		zend_mm_chunk_free(heap, q->ptr, q->size);
+#endif
 	}
 
 	/* move all chunks except of the first one into the cache */
