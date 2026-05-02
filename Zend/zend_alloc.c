@@ -151,7 +151,9 @@ static size_t _real_page_size = ZEND_MM_PAGE_SIZE;
 
 #if ZEND_MM_HEAP_PROTECTION
 /* Define ZEND_MM_MIN_USEABLE_BIN_SIZE to the size of two pointers */
-# if UINTPTR_MAX == UINT64_MAX
+# ifdef __CHERI_PURE_CAPABILITY__
+#  define ZEND_MM_MIN_USEABLE_BIN_SIZE 32
+# elif UINTPTR_MAX == UINT64_MAX
 #  define ZEND_MM_MIN_USEABLE_BIN_SIZE 16
 # elif UINTPTR_MAX == UINT32_MAX
 #  define ZEND_MM_MIN_USEABLE_BIN_SIZE 8
