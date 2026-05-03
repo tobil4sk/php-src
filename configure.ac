@@ -1286,9 +1286,25 @@ AS_CASE([$host_os],
   [fiber_os="other"]
 )
 
-AS_CASE([$fiber_cpu],
+if test "$fiber_cpu" = 'arm64'; then
+  AC_MSG_CHECKING([for CHERI-enabled AArch64])
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([], [[
+  #if !defined(__aarch64__) || !defined(__CHERI_PURE_CAPABILITY__)
+  #error "Not CHERI AArch64"
+  #endif
+  ]])],[
+    fiber_abi="-morello"
+    AC_MSG_RESULT([yes])
+  ],[
+    fiber_abi=""
+    AC_MSG_RESULT([no])
+  ])
+fi
+
+AS_CASE([$fiber_cpu$fiber_abi],
   [x86_64], [fiber_asm_file_prefix="x86_64_sysv"],
   [i386], [fiber_asm_file_prefix="i386_sysv"],
+  [arm64-morello], [fiber_asm_file_prefix="arm64_morello"],
   [arm64], [fiber_asm_file_prefix="arm64_aapcs"],
   [arm32], [fiber_asm_file_prefix="arm_aapcs"],
   [ppc64], [fiber_asm_file_prefix="ppc64_sysv"],
