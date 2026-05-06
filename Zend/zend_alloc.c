@@ -2487,6 +2487,34 @@ ZEND_API bool is_zend_ptr(const void *ptr)
 	return 0;
 }
 
+ZEND_API void *zend_mm_page_ptr(const void *ptr)
+{
+#ifdef __CHERI_PURE_CAPABILITY__
+	zend_mm_chunk *chunk;
+	int page_num;
+	void *page;
+	zend_mm_huge_list *block;
+
+	for (block = AG(mm_heap)->huge_list; block; block = block->next) {
+		if (ptr >= block->ptr && ptr < (void *) ((char *) block->ptr + block->size)) {
+			page = cheri_address_set(block->ptr, (uintptr_t) ptr & ~(ZEND_MM_PAGE_SIZE - 1));
+			page = cheri_address_set(page, cheri_address_get(page));
+			return cheri_bounds_set(page, ZEND_MM_PAGE_SIZE);
+		}
+	}
+
+	zend_mm_find_chunk_and_page(AG(mm_heap), (void *) ptr, &chunk, &page_num);
+	if (chunk == NULL) {
+		return NULL;
+	}
+	page = ZEND_MM_PAGE_ADDR(chunk, page_num);
+	page = cheri_address_set(page, cheri_address_get(page));
+	return cheri_bounds_set(page, ZEND_MM_PAGE_SIZE);
+#else
+	return (void *) ((uintptr_t) ptr & ~(ZEND_MM_PAGE_SIZE - 1));
+#endif
+}
+
 #if ZEND_MM_CUSTOM
 
 static ZEND_COLD void* ZEND_FASTCALL _malloc_custom(size_t size ZEND_FILE_LINE_DC ZEND_FILE_LINE_ORIG_DC)
