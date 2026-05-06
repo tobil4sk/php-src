@@ -236,7 +236,7 @@ static phpdbg_watchpoint_t *phpdbg_check_for_watchpoint(phpdbg_btree *tree, void
 }
 
 static void phpdbg_change_watchpoint_access(phpdbg_watchpoint_t *watch, int access) {
-	void *page_addr = phpdbg_get_page_boundary(watch->addr.ptr);
+	void *page_addr = zend_mm_page_ptr(watch->addr.ptr);
 	size_t size = phpdbg_get_total_page_size(watch->addr.ptr, watch->size);
 #ifdef HAVE_USERFAULTFD_WRITEFAULT
 	if (PHPDBG_G(watch_userfaultfd)) {
@@ -285,7 +285,7 @@ zend_result phpdbg_watchpoint_segfault_handler(void *addr) {
 zend_result phpdbg_watchpoint_segfault_handler(siginfo_t *info, void *context) {
 #endif
 
-	void *page = phpdbg_get_page_boundary(
+	void *page = zend_mm_page_ptr(
 #ifdef _WIN32
 		addr
 #else
@@ -1147,7 +1147,7 @@ void phpdbg_reenable_memory_watches(void) {
 				} else
 #endif
 				{
-					mprotect((void *) page, phpdbg_pagesize, PROT_READ);
+					mprotect(zend_mm_page_ptr((void *) page), phpdbg_pagesize, PROT_READ);
 				}
 			}
 		}
