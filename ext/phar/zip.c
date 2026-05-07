@@ -64,7 +64,7 @@ static int phar_zip_process_extra(php_stream *fp, phar_entry_info *entry, uint16
 			const size_t min_size = 5;
 			uint16_t header_size = PHAR_GET_16(h.header.size);
 			if (header_size >= min_size) {
-				read = php_stream_read(fp, &h.time.flags, min_size);
+				read = php_stream_read(fp, (char*)&h.time + XtOffsetOf(phar_zip_unix_time, flags), min_size);
 				if (read != min_size) {
 					return FAILURE;
 				}
@@ -92,7 +92,7 @@ static int phar_zip_process_extra(php_stream *fp, phar_entry_info *entry, uint16
 		}
 
 		/* unix3 header found */
-		read = php_stream_read(fp, (char *) &(h.unix3.crc32), sizeof(h.unix3) - sizeof(h.header));
+		read = php_stream_read(fp, (char*)&h.unix3 + XtOffsetOf(phar_zip_unix3, crc32), sizeof(h.unix3) - sizeof(h.header));
 		len -= read + 4;
 
 		if (sizeof(h.unix3) - sizeof(h.header) != read) {

@@ -383,7 +383,7 @@ static zend_object *spl_dllist_object_new_ex(zend_class_entry *class_type, zend_
 		}
 	}
 
-	return &intern->std;
+	return &__builtin_no_change_bounds(intern->std);
 }
 /* }}} */
 
@@ -1245,7 +1245,7 @@ static zend_object_iterator *spl_dllist_get_iterator(zend_class_entry *ce, zval 
 
 	SPL_LLIST_CHECK_ADDREF(iterator->traverse_pointer);
 
-	return &iterator->intern;
+	return &__builtin_no_change_bounds(iterator->intern);
 }
 /* }}} */
 

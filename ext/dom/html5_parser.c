@@ -93,7 +93,7 @@ static zend_always_inline xmlNodePtr lexbor_libxml2_bridge_new_text_node_fast(xm
         lxml_text->name = xmlStringText;
         lxml_text->type = XML_TEXT_NODE;
         lxml_text->doc = lxml_doc;
-        lxml_text->content = BAD_CAST &lxml_text->properties;
+        lxml_text->content = BAD_CAST &__builtin_no_change_bounds(lxml_text->properties);
         if (data != NULL) {
             memcpy(lxml_text->content, data, data_length);
         }
@@ -185,7 +185,7 @@ static lexbor_libxml2_bridge_status lexbor_libxml2_bridge_convert(
 					php_dom_add_templated_content(private_data, lxml_element, lxml_child_parent);
 				}
 
-				lxb_html_template_element_t *template = lxb_html_interface_template(&element->node);
+				lxb_html_template_element_t *template = lxb_html_interface_template(&__builtin_no_change_bounds(element->node));
 				if (template->content != NULL) {
 					child_node = template->content->node.last_child;
 				}

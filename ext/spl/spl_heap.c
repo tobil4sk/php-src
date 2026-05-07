@@ -433,7 +433,7 @@ static zend_object *spl_heap_object_new_ex(zend_class_entry *class_type, zend_ob
 		intern->flags = other->flags;
 		intern->fptr_cmp = other->fptr_cmp;
 		intern->fptr_count = other->fptr_count;
-		return &intern->std;
+		return &__builtin_no_change_bounds(intern->std);
 	}
 
 	while (parent) {
@@ -469,7 +469,7 @@ static zend_object *spl_heap_object_new_ex(zend_class_entry *class_type, zend_ob
 		}
 	}
 
-	return &intern->std;
+	return &__builtin_no_change_bounds(intern->std);
 }
 /* }}} */
 
@@ -1332,7 +1332,7 @@ static zend_object_iterator *spl_heap_get_iterator(zend_class_entry *ce, zval *o
 	iterator->ce       = ce;
 	ZVAL_UNDEF(&iterator->value);
 
-	return &iterator->it;
+	return &__builtin_no_change_bounds(iterator->it);
 }
 /* }}} */
 
@@ -1351,7 +1351,7 @@ static zend_object_iterator *spl_pqueue_get_iterator(zend_class_entry *ce, zval 
 	iterator->ce       = ce;
 	ZVAL_UNDEF(&iterator->value);
 
-	return &iterator->it;
+	return &__builtin_no_change_bounds(iterator->it);
 }
 /* }}} */
 

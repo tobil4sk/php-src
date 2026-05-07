@@ -1304,7 +1304,7 @@ ZEND_API zval* ZEND_FASTCALL zend_hash_set_bucket_key(HashTable *ht, Bucket *b, 
 		Z_NEXT(b->val) = Z_NEXT(p->val);
 		Z_NEXT(p->val) = idx;
 	}
-	return &b->val;
+	return &__builtin_no_change_bounds(b->val);
 }
 
 static void ZEND_FASTCALL zend_hash_do_resize(HashTable *ht)
@@ -2686,7 +2686,7 @@ ZEND_API zval* ZEND_FASTCALL zend_hash_find(const HashTable *ht, zend_string *ke
 
 	(void)zend_string_hash_val(key);
 	p = zend_hash_find_bucket(ht, key);
-	return p ? &p->val : NULL;
+	return p ? &__builtin_no_change_bounds(p->val) : NULL;
 }
 
 ZEND_API zval* ZEND_FASTCALL zend_hash_find_known_hash(const HashTable *ht, const zend_string *key)
@@ -2696,7 +2696,7 @@ ZEND_API zval* ZEND_FASTCALL zend_hash_find_known_hash(const HashTable *ht, cons
 	IS_CONSISTENT(ht);
 
 	p = zend_hash_find_bucket(ht, key);
-	return p ? &p->val : NULL;
+	return p ? &__builtin_no_change_bounds(p->val) : NULL;
 }
 
 ZEND_API zval* ZEND_FASTCALL zend_hash_str_find(const HashTable *ht, const char *str, size_t len)
@@ -2708,7 +2708,7 @@ ZEND_API zval* ZEND_FASTCALL zend_hash_str_find(const HashTable *ht, const char 
 
 	h = zend_inline_hash_func(str, len);
 	p = zend_hash_str_find_bucket(ht, str, len, h);
-	return p ? &p->val : NULL;
+	return p ? &__builtin_no_change_bounds(p->val) : NULL;
 }
 
 ZEND_API zval* ZEND_FASTCALL zend_hash_index_find(const HashTable *ht, HT_KEY_TYPE h)
@@ -2729,7 +2729,7 @@ ZEND_API zval* ZEND_FASTCALL zend_hash_index_find(const HashTable *ht, HT_KEY_TY
 	}
 
 	p = zend_hash_index_find_bucket(ht, h);
-	return p ? &p->val : NULL;
+	return p ? &__builtin_no_change_bounds(p->val) : NULL;
 }
 
 ZEND_API zval* ZEND_FASTCALL _zend_hash_index_find(const HashTable *ht, HT_KEY_TYPE h)

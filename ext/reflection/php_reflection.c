@@ -298,7 +298,7 @@ static zend_object *reflection_objects_new(zend_class_entry *class_type) /* {{{ 
 
 	zend_object_std_init(&intern->zo, class_type);
 	object_properties_init(&intern->zo, class_type);
-	return &intern->zo;
+	return &__builtin_no_change_bounds(intern->zo);
 }
 /* }}} */
 

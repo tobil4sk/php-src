@@ -62,7 +62,7 @@ static void php_uri_property_write_helper(INTERNAL_FUNCTION_PARAMETERS, php_uri_
 	php_uri_object *old_uri_object = Z_URI_OBJECT_P(ZEND_THIS);
 	ZEND_ASSERT(old_uri_object->uri != NULL);
 
-	zend_object *new_object = old_uri_object->std.handlers->clone_obj(&old_uri_object->std);
+	zend_object *new_object = old_uri_object->std.handlers->clone_obj(&__builtin_no_change_bounds(old_uri_object->std));
 	if (new_object == NULL) {
 		RETURN_THROWS();
 	}

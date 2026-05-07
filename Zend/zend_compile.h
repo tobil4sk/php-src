@@ -597,7 +597,7 @@ typedef struct _zend_internal_function {
 
 #define ZEND_FN_SCOPE_NAME(function)  ((function) && (function)->common.scope ? ZSTR_VAL((function)->common.scope->name) : "")
 
-union _zend_function {
+union __attribute__((cheri_no_subobject_bounds)) _zend_function {
 	uint8_t type;	/* MUST be the first element of this struct! */
 	uint32_t   quick_arg_flags;
 

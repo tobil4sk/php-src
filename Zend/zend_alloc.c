@@ -2789,7 +2789,8 @@ ZEND_API void zend_mm_shutdown(zend_mm_heap *heap, bool full, bool silent)
 		heap->last_chunks_delete_boundary = 0;
 		heap->last_chunks_delete_count = 0;
 
-		memset(p->free_map, 0, sizeof(p->free_map) + sizeof(p->map));
+		memset(p->free_map, 0, sizeof(p->free_map));
+		memset(p->map, 0, sizeof(p->map));
 		p->free_map[0] = (1L << ZEND_MM_FIRST_PAGE) - 1;
 		p->map[0] = ZEND_MM_LRUN(ZEND_MM_FIRST_PAGE);
 

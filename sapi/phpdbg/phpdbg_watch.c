@@ -138,7 +138,7 @@ const phpdbg_command_t phpdbg_watch_commands[] = {
 bool phpdbg_check_watch_diff(phpdbg_watchtype type, void *oldPtr, void *newPtr) {
 	switch (type) {
 		case WATCH_ON_BUCKET:
-			if (memcmp(&((Bucket *) oldPtr)->h, &((Bucket *) newPtr)->h, sizeof(Bucket) - sizeof(zval) /* hash+key comparison */) != 0) {
+			if (memcmp(&__builtin_no_change_bounds(((Bucket *) oldPtr)->h), &__builtin_no_change_bounds(((Bucket *) newPtr)->h), sizeof(Bucket) - sizeof(zval) /* hash+key comparison */) != 0) {
 				return true;
 			}
 			/* Fall through to also compare the value from the bucket. */
@@ -656,7 +656,7 @@ void phpdbg_watch_parent_ht(phpdbg_watch_element *element) {
 
 			phpdbg_set_addr_watchpoint(HT_GET_DATA_ADDR(hti->ht), HT_HASH_SIZE(hti->ht->nTableMask), &hti->hash_watch);
 			hti->hash_watch.type = WATCH_ON_HASHDATA;
-			phpdbg_store_watchpoint_btree(&hti->hash_watch);
+			phpdbg_store_watchpoint_btree(&__builtin_no_change_bounds(hti->hash_watch));
 			phpdbg_activate_watchpoint(&hti->hash_watch);
 		} else {
 			hti = (phpdbg_watch_ht_info *) res->ptr;
@@ -1216,7 +1216,7 @@ void phpdbg_watch_efree(void *ptr ZEND_FILE_LINE_DC ZEND_FILE_LINE_ORIG_DC) {
 				phpdbg_watch_element *element;
 				phpdbg_watch_ht_info *hti = (phpdbg_watch_ht_info *) watch;
 
-				ZEND_HASH_MAP_FOREACH_PTR(&hti->watches, element) {
+				ZEND_HASH_MAP_FOREACH_PTR(&__builtin_no_change_bounds(hti->watches), element) {
 					zend_ulong num = zend_hash_num_elements(&hti->watches);
 					phpdbg_remove_watchpoint(element->watch);
 					if (num == 1) { /* prevent access into freed memory */

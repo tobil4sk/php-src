@@ -196,10 +196,10 @@ static zend_object *spl_filesystem_object_new(zend_class_entry *class_type)
 	intern->file_class = spl_ce_SplFileObject;
 	intern->info_class = spl_ce_SplFileInfo;
 
-	zend_object_std_init(&intern->std, class_type);
+	zend_object_std_init(&__builtin_no_change_bounds(intern->std), class_type);
 	object_properties_init(&intern->std, class_type);
 
-	return &intern->std;
+	return &__builtin_no_change_bounds(intern->std);
 }
 /* }}} */
 
@@ -477,7 +477,7 @@ static spl_filesystem_object *spl_filesystem_object_create_info(zend_string *fil
 	ZEND_ASSERT(ce != NULL);
 
 	intern = spl_filesystem_from_obj(spl_filesystem_object_new(ce));
-	RETVAL_OBJ(&intern->std);
+	RETVAL_OBJ(&__builtin_no_change_bounds(intern->std));
 
 	if (ce->constructor->common.scope != spl_ce_SplFileInfo) {
 		ZVAL_STR_COPY(&arg1, file_path);
@@ -513,7 +513,7 @@ static spl_filesystem_object *spl_filesystem_object_create_type(int num_args, sp
 			ce = ce ? ce : source->info_class;
 
 			intern = spl_filesystem_from_obj(spl_filesystem_object_new(ce));
-			RETVAL_OBJ(&intern->std);
+			RETVAL_OBJ(&__builtin_no_change_bounds(intern->std));
 
 			if (spl_filesystem_object_get_file_name(source) == FAILURE) {
 				return NULL;
@@ -542,7 +542,7 @@ static spl_filesystem_object *spl_filesystem_object_create_type(int num_args, sp
 			}
 
 			intern = spl_filesystem_from_obj(spl_filesystem_object_new(ce));
-			RETVAL_OBJ(&intern->std);
+			RETVAL_OBJ(&__builtin_no_change_bounds(intern->std));
 
 			if (spl_filesystem_object_get_file_name(source) == FAILURE) {
 				return NULL;
@@ -1635,7 +1635,7 @@ static zend_object_iterator *spl_filesystem_dir_get_iterator(zend_class_entry *c
 	 * doesn't check whether it's set */
 	iterator->current = *object;
 
-	return &iterator->intern;
+	return &__builtin_no_change_bounds(iterator->intern);
 }
 /* }}} */
 
@@ -1661,7 +1661,7 @@ static zval *spl_filesystem_dir_it_current_data(zend_object_iterator *iter)
 {
 	spl_filesystem_iterator *iterator = (spl_filesystem_iterator *)iter;
 
-	return &iterator->current;
+	return &__builtin_no_change_bounds(iterator->current);
 }
 /* }}} */
 
@@ -1826,7 +1826,7 @@ static zend_object_iterator *spl_filesystem_tree_get_iterator(zend_class_entry *
 	ZVAL_OBJ_COPY(&iterator->intern.data, Z_OBJ_P(object));
 	iterator->intern.funcs = &spl_filesystem_tree_it_funcs;
 
-	return &iterator->intern;
+	return &__builtin_no_change_bounds(iterator->intern);
 }
 /* }}} */
 

@@ -475,7 +475,7 @@ PHP_FUNCTION(stream_wrapper_register)
 
 	rsrc = zend_register_resource(uwrap, le_protocols);
 
-	if (php_register_url_stream_wrapper_volatile(protocol, &uwrap->wrapper) == SUCCESS) {
+	if (php_register_url_stream_wrapper_volatile(protocol, &__builtin_no_change_bounds(uwrap->wrapper)) == SUCCESS) {
 		uwrap->resource = rsrc;
 		RETURN_TRUE;
 	}

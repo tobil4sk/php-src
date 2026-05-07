@@ -744,7 +744,7 @@ static zend_always_inline uint8_t zval_get_type(const zval* pz) {
 
 #define GC_DTOR(p) \
 	do { \
-		zend_refcounted_h *_p = &(p)->gc; \
+		zend_refcounted_h *_p = &__builtin_no_change_bounds((p)->gc); \
 		if (zend_gc_delref(_p) == 0) { \
 			rc_dtor_func((zend_refcounted *)_p); \
 		} else { \
@@ -754,7 +754,7 @@ static zend_always_inline uint8_t zval_get_type(const zval* pz) {
 
 #define GC_DTOR_NO_REF(p) \
 	do { \
-		zend_refcounted_h *_p = &(p)->gc; \
+		zend_refcounted_h *_p = &__builtin_no_change_bounds((p)->gc); \
 		if (zend_gc_delref(_p) == 0) { \
 			rc_dtor_func((zend_refcounted *)_p); \
 		} else { \
@@ -764,7 +764,7 @@ static zend_always_inline uint8_t zval_get_type(const zval* pz) {
 
 #define GC_TRY_DTOR_NO_REF(p) \
 	do { \
-		zend_refcounted_h *_p = &(p)->gc; \
+		zend_refcounted_h *_p = &__builtin_no_change_bounds((p)->gc); \
 		if (!(_p->u.type_info & GC_IMMUTABLE)) { \
 			if (zend_gc_delref(_p) == 0) { \
 				rc_dtor_func((zend_refcounted *)_p); \

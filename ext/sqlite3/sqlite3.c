@@ -2380,7 +2380,7 @@ static void php_sqlite3_stmt_object_free_storage(zend_object *object) /* {{{ */
 	}
 
 	if (intern->db_obj) {
-		OBJ_RELEASE(&intern->db_obj->zo);
+		OBJ_RELEASE(&__builtin_no_change_bounds(intern->db_obj->zo));
 	}
 
 	zend_object_std_dtor(&intern->zo);
@@ -2398,7 +2398,7 @@ static void php_sqlite3_result_object_free_storage(zend_object *object) /* {{{ *
 			sqlite3_reset(intern->stmt_obj->stmt);
 		}
 
-		OBJ_RELEASE(&intern->stmt_obj->zo);
+		OBJ_RELEASE(&__builtin_no_change_bounds(intern->stmt_obj->zo));
 	}
 
 	zend_object_std_dtor(&intern->zo);
@@ -2418,7 +2418,7 @@ static zend_object *php_sqlite3_object_new(zend_class_entry *class_type) /* {{{ 
 	zend_object_std_init(&intern->zo, class_type);
 	object_properties_init(&intern->zo, class_type);
 
-	return &intern->zo;
+	return &__builtin_no_change_bounds(intern->zo);
 }
 /* }}} */
 
@@ -2432,7 +2432,7 @@ static zend_object *php_sqlite3_stmt_object_new(zend_class_entry *class_type) /*
 	zend_object_std_init(&intern->zo, class_type);
 	object_properties_init(&intern->zo, class_type);
 
-	return &intern->zo;
+	return &__builtin_no_change_bounds(intern->zo);
 }
 /* }}} */
 
@@ -2446,7 +2446,7 @@ static zend_object *php_sqlite3_result_object_new(zend_class_entry *class_type) 
 	zend_object_std_init(&intern->zo, class_type);
 	object_properties_init(&intern->zo, class_type);
 
-	return &intern->zo;
+	return &__builtin_no_change_bounds(intern->zo);
 }
 /* }}} */
 

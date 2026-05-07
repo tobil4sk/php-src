@@ -12196,7 +12196,7 @@ static void zend_eval_const_expr(zend_ast **ast_ptr) /* {{{ */
 				return;
 			}
 
-			child = &ast->child[2 - zend_is_true(zend_ast_get_zval(ast->child[0]))];
+			child = &__builtin_no_change_bounds(ast->child[2 - zend_is_true(zend_ast_get_zval(ast->child[0]))]);
 			if (*child == NULL) {
 				child--;
 			}

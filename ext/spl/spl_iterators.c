@@ -968,10 +968,10 @@ static zend_object *spl_RecursiveIteratorIterator_new_ex(zend_class_entry *class
 		intern->postfix[0] = ZSTR_EMPTY_ALLOC();
 	}
 
-	zend_object_std_init(&intern->std, class_type);
+	zend_object_std_init(&__builtin_no_change_bounds(intern->std), class_type);
 	object_properties_init(&intern->std, class_type);
 
-	return &intern->std;
+	return &__builtin_no_change_bounds(intern->std);
 }
 /* }}} */
 
@@ -2111,7 +2111,7 @@ static zend_object *spl_dual_it_new(zend_class_entry *class_type)
 	zend_object_std_init(&intern->std, class_type);
 	object_properties_init(&intern->std, class_type);
 
-	return &intern->std;
+	return &__builtin_no_change_bounds(intern->std);
 }
 /* }}} */
 

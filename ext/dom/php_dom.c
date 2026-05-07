@@ -666,9 +666,9 @@ static zend_object *dom_objects_store_clone_obj(zend_object *zobject) /* {{{ */
 		}
 	}
 
-	zend_objects_clone_members(&clone->std, &intern->std);
+	zend_objects_clone_members(&__builtin_no_change_bounds(clone->std), &__builtin_no_change_bounds(intern->std));
 
-	return &clone->std;
+	return &__builtin_no_change_bounds(clone->std);
 }
 /* }}} */
 
@@ -737,7 +737,7 @@ static zend_object *dom_token_list_new(zend_class_entry *class_type)
 	zend_object_std_init(&intern->dom.std, class_type);
 	object_properties_init(&intern->dom.std, class_type);
 
-	return &intern->dom.std;
+	return &__builtin_no_change_bounds(intern->dom.std);
 }
 
 static const zend_module_dep dom_deps[] = {
@@ -1518,7 +1518,7 @@ static dom_object* dom_objects_set_class(zend_class_entry *class_type)
 zend_object *dom_objects_new(zend_class_entry *class_type)
 {
 	dom_object *intern = dom_objects_set_class(class_type);
-	return &intern->std;
+	return &__builtin_no_change_bounds(intern->std);
 }
 /* }}} */
 
@@ -1526,14 +1526,14 @@ static zend_object *dom_objects_namespace_node_new(zend_class_entry *class_type)
 {
 	dom_object_namespace_node *intern = zend_object_alloc(sizeof(dom_object_namespace_node), class_type);
 	dom_objects_set_class_ex(class_type, &intern->dom);
-	return &intern->dom.std;
+	return &__builtin_no_change_bounds(intern->dom.std);
 }
 
 static void dom_object_namespace_node_free_storage(zend_object *object)
 {
 	dom_object_namespace_node *intern = php_dom_namespace_node_obj_from_obj(object);
 	if (intern->parent_intern != NULL) {
-		OBJ_RELEASE(&intern->parent_intern->std);
+		OBJ_RELEASE(&__builtin_no_change_bounds(intern->parent_intern->std));
 	}
 	dom_objects_free_storage(object);
 }
@@ -1553,7 +1553,7 @@ zend_object *dom_xpath_objects_new(zend_class_entry *class_type)
 	zend_object_std_init(&intern->dom.std, class_type);
 	object_properties_init(&intern->dom.std, class_type);
 
-	return &intern->dom.std;
+	return &__builtin_no_change_bounds(intern->dom.std);
 }
 /* }}} */
 
@@ -1571,7 +1571,7 @@ void dom_nnodemap_objects_free_storage(zend_object *object) /* {{{ */
 
 	if (objmap) {
 		if (objmap->cached_obj) {
-			OBJ_RELEASE(&objmap->cached_obj->std);
+			OBJ_RELEASE(&__builtin_no_change_bounds(objmap->cached_obj->std));
 		}
 		if (objmap->release_local) {
 			dom_zend_string_release_from_char_pointer(objmap->local);
@@ -1586,7 +1586,7 @@ void dom_nnodemap_objects_free_storage(zend_object *object) /* {{{ */
 			zend_array_release(objmap->array);
 		}
 		if (objmap->baseobj) {
-			OBJ_RELEASE(&objmap->baseobj->std);
+			OBJ_RELEASE(&__builtin_no_change_bounds(objmap->baseobj->std));
 		}
 		xmlDictFree(objmap->dict);
 		efree(objmap);
@@ -1607,7 +1607,7 @@ zend_object *dom_nnodemap_objects_new(zend_class_entry *class_type)
 	objmap->cached_length = -1;
 	objmap->handler = &php_dom_obj_map_noop;
 
-	return &intern->std;
+	return &__builtin_no_change_bounds(intern->std);
 }
 
 static zend_always_inline zend_class_entry *dom_get_element_ce(const xmlNode *node, bool modern)
@@ -1638,7 +1638,7 @@ PHP_DOM_EXPORT bool php_dom_create_object(xmlNodePtr obj, zval *return_value, do
 {
 	dom_object *intern = php_dom_object_get_data(obj);
 	if (intern) {
-		ZVAL_OBJ_COPY(return_value, &intern->std);
+		ZVAL_OBJ_COPY(return_value, &__builtin_no_change_bounds(intern->std));
 		return true;
 	}
 

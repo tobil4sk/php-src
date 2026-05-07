@@ -1227,7 +1227,7 @@ static void dom_document_adopt_node(INTERNAL_FUNCTION_PARAMETERS, bool modern)
 		RETURN_FALSE;
 	}
 
-	RETURN_OBJ_COPY(&dom_object_nodep->std);
+	RETURN_OBJ_COPY(&__builtin_no_change_bounds(dom_object_nodep->std));
 }
 
 PHP_METHOD(DOMDocument, adoptNode)

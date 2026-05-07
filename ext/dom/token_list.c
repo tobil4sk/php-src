@@ -777,7 +777,7 @@ zend_object_iterator *dom_token_list_get_iterator(zend_class_entry *ce, zval *ob
 	iterator->it.funcs = &dom_token_list_it_funcs;
 	iterator->cache_tag = intern->cache_tag;
 
-	return &iterator->it;
+	return &__builtin_no_change_bounds(iterator->it);
 }
 
 #endif

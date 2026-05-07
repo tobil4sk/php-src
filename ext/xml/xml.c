@@ -313,7 +313,7 @@ static zend_object *xml_parser_create_object(zend_class_entry *class_type) {
 	zend_object_std_init(&intern->std, class_type);
 	object_properties_init(&intern->std, class_type);
 
-	return &intern->std;
+	return &__builtin_no_change_bounds(intern->std);
 }
 
 static void xml_parser_free_ltags(xml_parser *parser)

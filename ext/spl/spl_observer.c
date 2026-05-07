@@ -303,7 +303,7 @@ static zend_object *spl_object_storage_new_ex(zend_class_entry *class_type, zend
 		spl_object_storage_addall(intern, other);
 	}
 
-	return &intern->std;
+	return &__builtin_no_change_bounds(intern->std);
 }
 /* }}} */
 

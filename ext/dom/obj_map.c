@@ -29,7 +29,7 @@
 static zend_always_inline void objmap_cache_release_cached_obj(dom_nnodemap_object *objmap)
 {
 	if (objmap->cached_obj) {
-		OBJ_RELEASE(&objmap->cached_obj->std);
+		OBJ_RELEASE(&__builtin_no_change_bounds(objmap->cached_obj->std));
 		objmap->cached_obj = NULL;
 		objmap->cached_obj_index = 0;
 	}

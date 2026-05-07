@@ -1824,7 +1824,7 @@ static zend_object *date_object_new_date(zend_class_entry *class_type) /* {{{ */
 	zend_object_std_init(&intern->std, class_type);
 	object_properties_init(&intern->std, class_type);
 
-	return &intern->std;
+	return &__builtin_no_change_bounds(intern->std);
 } /* }}} */
 
 static zend_object *date_object_clone_date(zend_object *this_ptr) /* {{{ */
@@ -1834,7 +1834,7 @@ static zend_object *date_object_clone_date(zend_object *this_ptr) /* {{{ */
 
 	zend_objects_clone_members(&new_obj->std, &old_obj->std);
 	if (!old_obj->time) {
-		return &new_obj->std;
+		return &__builtin_no_change_bounds(new_obj->std);
 	}
 
 	/* this should probably moved to a new `timelib_time *timelime_time_clone(timelib_time *)` */
@@ -1847,7 +1847,7 @@ static zend_object *date_object_clone_date(zend_object *this_ptr) /* {{{ */
 		new_obj->time->tz_info = old_obj->time->tz_info;
 	}
 
-	return &new_obj->std;
+	return &__builtin_no_change_bounds(new_obj->std);
 } /* }}} */
 
 static void date_clone_immutable(zval *object, zval *new_object) /* {{{ */
@@ -1964,7 +1964,7 @@ static zend_object *date_object_new_timezone(zend_class_entry *class_type) /* {{
 	zend_object_std_init(&intern->std, class_type);
 	object_properties_init(&intern->std, class_type);
 
-	return &intern->std;
+	return &__builtin_no_change_bounds(intern->std);
 } /* }}} */
 
 static zend_object *date_object_clone_timezone(zend_object *this_ptr) /* {{{ */
@@ -1974,7 +1974,7 @@ static zend_object *date_object_clone_timezone(zend_object *this_ptr) /* {{{ */
 
 	zend_objects_clone_members(&new_obj->std, &old_obj->std);
 	if (!old_obj->initialized) {
-		return &new_obj->std;
+		return &__builtin_no_change_bounds(new_obj->std);
 	}
 
 	new_obj->type = old_obj->type;
@@ -1993,7 +1993,7 @@ static zend_object *date_object_clone_timezone(zend_object *this_ptr) /* {{{ */
 			break;
 	}
 
-	return &new_obj->std;
+	return &__builtin_no_change_bounds(new_obj->std);
 } /* }}} */
 
 static int date_object_compare_timezone(zval *tz1, zval *tz2) /* {{{ */
@@ -2128,7 +2128,7 @@ static zend_object *date_object_new_interval(zend_class_entry *class_type) /* {{
 	zend_object_std_init(&intern->std, class_type);
 	object_properties_init(&intern->std, class_type);
 
-	return &intern->std;
+	return &__builtin_no_change_bounds(intern->std);
 } /* }}} */
 
 static zend_object *date_object_clone_interval(zend_object *this_ptr) /* {{{ */
@@ -2147,7 +2147,7 @@ static zend_object *date_object_clone_interval(zend_object *this_ptr) /* {{{ */
 		new_obj->diff = timelib_rel_time_clone(old_obj->diff);
 	}
 
-	return &new_obj->std;
+	return &__builtin_no_change_bounds(new_obj->std);
 } /* }}} */
 
 static HashTable *date_object_get_gc_interval(zend_object *object, zval **table, int *n) /* {{{ */
@@ -2219,7 +2219,7 @@ static zend_object *date_object_new_period(zend_class_entry *class_type) /* {{{ 
 	zend_object_std_init(&intern->std, class_type);
 	object_properties_init(&intern->std, class_type);
 
-	return &intern->std;
+	return &__builtin_no_change_bounds(intern->std);
 } /* }}} */
 
 static zend_object *date_object_clone_period(zend_object *this_ptr) /* {{{ */
@@ -2246,7 +2246,7 @@ static zend_object *date_object_clone_period(zend_object *this_ptr) /* {{{ */
 	if (old_obj->interval) {
 		new_obj->interval = timelib_rel_time_clone(old_obj->interval);
 	}
-	return &new_obj->std;
+	return &__builtin_no_change_bounds(new_obj->std);
 } /* }}} */
 
 static void date_object_free_storage_date(zend_object *object) /* {{{ */

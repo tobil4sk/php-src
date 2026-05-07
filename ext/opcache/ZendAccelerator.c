@@ -499,10 +499,10 @@ static zend_always_inline zend_string *accel_find_interned_string(zend_string *s
 	h = zend_string_hash_val(str);
 
 	/* check for existing interned string */
-	pos = *STRTAB_HASH_TO_SLOT(&ZCSG(interned_strings), h);
+	pos = *STRTAB_HASH_TO_SLOT(&__builtin_no_change_bounds(ZCSG(interned_strings)), h);
 	if (EXPECTED(pos != STRTAB_INVALID_POS)) {
 		do {
-			s = STRTAB_POS_TO_STR(&ZCSG(interned_strings), pos);
+			s = STRTAB_POS_TO_STR(&__builtin_no_change_bounds(ZCSG(interned_strings)), pos);
 			if (EXPECTED(ZSTR_H(s) == h) && zend_string_equal_content(s, str)) {
 				return s;
 			}
@@ -531,11 +531,11 @@ zend_string* ZEND_FASTCALL accel_new_interned_string(zend_string *str)
 	h = zend_string_hash_val(str);
 
 	/* check for existing interned string */
-	hash_slot = STRTAB_HASH_TO_SLOT(&ZCSG(interned_strings), h);
+	hash_slot = STRTAB_HASH_TO_SLOT(&__builtin_no_change_bounds(ZCSG(interned_strings)), h);
 	pos = *hash_slot;
 	if (EXPECTED(pos != STRTAB_INVALID_POS)) {
 		do {
-			s = STRTAB_POS_TO_STR(&ZCSG(interned_strings), pos);
+			s = STRTAB_POS_TO_STR(&__builtin_no_change_bounds(ZCSG(interned_strings)), pos);
 			if (EXPECTED(ZSTR_H(s) == h) && zend_string_equal_content(s, str)) {
 				goto finish;
 			}
@@ -552,7 +552,7 @@ zend_string* ZEND_FASTCALL accel_new_interned_string(zend_string *str)
 	/* create new interning string in shared interned strings buffer */
 	ZCSG(interned_strings).nNumOfElements++;
 	s = ZCSG(interned_strings).top;
-	hash_slot = STRTAB_HASH_TO_SLOT(&ZCSG(interned_strings), h);
+	hash_slot = STRTAB_HASH_TO_SLOT(&__builtin_no_change_bounds(ZCSG(interned_strings)), h);
 	STRTAB_COLLISION(s) = *hash_slot;
 	*hash_slot = STRTAB_STR_TO_POS(&ZCSG(interned_strings), s);
 	GC_SET_REFCOUNT(s, 2);
@@ -595,10 +595,10 @@ static zend_always_inline zend_string *accel_find_interned_string_ex(zend_ulong 
 	zend_string *s;
 
 	/* check for existing interned string */
-	pos = *STRTAB_HASH_TO_SLOT(&ZCSG(interned_strings), h);
+	pos = *STRTAB_HASH_TO_SLOT(&__builtin_no_change_bounds(ZCSG(interned_strings)), h);
 	if (EXPECTED(pos != STRTAB_INVALID_POS)) {
 		do {
-			s = STRTAB_POS_TO_STR(&ZCSG(interned_strings), pos);
+			s = STRTAB_POS_TO_STR(&__builtin_no_change_bounds(ZCSG(interned_strings)), pos);
 			if (EXPECTED(ZSTR_H(s) == h) && zend_string_equals_cstr(s, str, size)) {
 				return s;
 			}
@@ -2900,7 +2900,7 @@ static zend_result zend_accel_init_shm(void)
 			hash_size * sizeof(zend_string_table_pos_t);
 		ZCSG(interned_strings).nNumOfElements = 0;
 		ZCSG(interned_strings).start =
-			(zend_string*)((char*)&ZCSG(interned_strings) +
+			(zend_string*)((char*)&__builtin_no_change_bounds(ZCSG(interned_strings)) +
 				sizeof(zend_string_table) +
 				((hash_size + 1) * sizeof(zend_string_table_pos_t))) +
 				8;
@@ -2914,12 +2914,12 @@ static zend_result zend_accel_init_shm(void)
 		ZEND_ASSERT(((uintptr_t)ZCSG(interned_strings).end - (uintptr_t)&ZCSG(interned_strings)) / ZEND_STRING_TABLE_POS_ALIGNMENT < ZEND_STRING_TABLE_POS_MAX);
 		ZCSG(interned_strings).saved_top = NULL;
 
-		memset((char*)&ZCSG(interned_strings) + sizeof(zend_string_table),
+		memset((char*)&__builtin_no_change_bounds(ZCSG(interned_strings)) + sizeof(zend_string_table),
 			STRTAB_INVALID_POS,
 			(char*)ZCSG(interned_strings).start -
 				((char*)&ZCSG(interned_strings) + sizeof(zend_string_table)));
 	} else {
-		*STRTAB_HASH_TO_SLOT(&ZCSG(interned_strings), 0) = STRTAB_INVALID_POS;
+		*STRTAB_HASH_TO_SLOT(&__builtin_no_change_bounds(ZCSG(interned_strings)), 0) = STRTAB_INVALID_POS;
 	}
 
 	/* We can reuse init_interned_string_for_php for the "init_existing_interned" case,

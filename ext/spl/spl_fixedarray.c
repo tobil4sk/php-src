@@ -281,7 +281,7 @@ static zend_object *spl_fixedarray_object_new_ex(zend_class_entry *class_type, z
 
 	intern = zend_object_alloc(sizeof(spl_fixedarray_object), parent);
 
-	zend_object_std_init(&intern->std, class_type);
+	zend_object_std_init(&__builtin_no_change_bounds(intern->std), class_type);
 	object_properties_init(&intern->std, class_type);
 
 	if (orig && clone_orig) {
@@ -298,7 +298,7 @@ static zend_object *spl_fixedarray_object_new_ex(zend_class_entry *class_type, z
 		intern->fptr_count = fptr_count;
 	}
 
-	return &intern->std;
+	return &__builtin_no_change_bounds(intern->std);
 }
 
 static zend_object *spl_fixedarray_new(zend_class_entry *class_type)
@@ -953,7 +953,7 @@ static zend_object_iterator *spl_fixedarray_get_iterator(zend_class_entry *ce, z
 	ZVAL_OBJ_COPY(&iterator->intern.data, Z_OBJ_P(object));
 	iterator->intern.funcs = &spl_fixedarray_it_funcs;
 
-	return &iterator->intern;
+	return &__builtin_no_change_bounds(iterator->intern);
 }
 
 PHP_MINIT_FUNCTION(spl_fixedarray)

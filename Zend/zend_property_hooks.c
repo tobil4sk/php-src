@@ -387,5 +387,5 @@ ZEND_API zend_object_iterator *zend_hooked_object_get_iterator(zend_class_entry 
 	ZVAL_UNDEF(&iterator->current_key);
 	ZVAL_UNDEF(&iterator->current_data);
 
-	return &iterator->it;
+	return &__builtin_no_change_bounds(iterator->it);
 }

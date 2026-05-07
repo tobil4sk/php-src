@@ -434,7 +434,7 @@ static HashTable *zend_generator_get_gc(zend_object *object, zval **table, int *
 		} else {
 			/* If the non-closure generator has been closed, it can only hold on to three values: The value, key
 			 * and retval. These three zvals are stored sequentially starting at &generator->value. */
-			*table = &generator->value;
+			*table = &__builtin_no_change_bounds(generator->value);
 			*n = 3;
 		}
 		return NULL;

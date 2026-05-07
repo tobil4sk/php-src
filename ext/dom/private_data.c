@@ -36,7 +36,7 @@ static void php_dom_libxml_private_data_ns_hook(php_libxml_private_data_header *
 
 php_libxml_private_data_header *php_dom_libxml_private_data_header(php_dom_private_data *private_data)
 {
-	return private_data == NULL ? NULL : &private_data->header;
+	return private_data == NULL ? NULL : &__builtin_no_change_bounds(private_data->header);
 }
 
 php_dom_libxml_ns_mapper *php_dom_ns_mapper_from_private(php_dom_private_data *private_data)

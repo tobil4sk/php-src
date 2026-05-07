@@ -658,7 +658,7 @@ PHP_METHOD(PDO, prepare)
 	stmt->dbh = dbh;
 	/* give it a reference to me */
 	GC_ADDREF(&dbh_obj->std);
-	stmt->database_object_handle = &dbh_obj->std;
+	stmt->database_object_handle = &__builtin_no_change_bounds(dbh_obj->std);
 
 	if (dbh->methods->preparer(dbh, statement, stmt, options)) {
 		if (Z_TYPE(ctor_args) == IS_ARRAY) {
@@ -1222,8 +1222,7 @@ PHP_METHOD(PDO, query)
 	stmt->dbh = dbh;
 	/* give it a reference to me */
 	GC_ADDREF(&dbh_obj->std);
-	stmt->database_object_handle = &dbh_obj->std;
-
+	stmt->database_object_handle = &__builtin_no_change_bounds(dbh_obj->std);
 	if (dbh->methods->preparer(dbh, statement, stmt, NULL)) {
 		PDO_STMT_CLEAR_ERR();
 		if (fetch_mode_is_null || pdo_stmt_setup_fetch_mode(stmt, fetch_mode, 2, args, num_args)) {
@@ -1609,7 +1608,7 @@ zend_object *pdo_dbh_new(zend_class_entry *ce)
 	dbh->inner = ecalloc(1, sizeof(pdo_dbh_t));
 	dbh->inner->def_stmt_ce = pdo_dbstmt_ce;
 
-	return &dbh->std;
+	return &__builtin_no_change_bounds(dbh->std);
 }
 
 /* }}} */
