@@ -163,7 +163,7 @@ from_oct(const char *where, size_t digs)
 
 	while (isspace(CAST(unsigned char, *where))) {	/* Skip spaces */
 		where++;
-		if (digs-- == 0)
+		if (--digs == 0)
 			return -1;		/* All blank field */
 	}
 	value = 0;
