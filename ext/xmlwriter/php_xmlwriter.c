@@ -72,10 +72,10 @@ static zend_object *xmlwriter_object_new(zend_class_entry *class_type)
 	ze_xmlwriter_object *intern;
 
 	intern = zend_object_alloc(sizeof(ze_xmlwriter_object), class_type);
-	zend_object_std_init(&__builtin_no_change_bounds(intern->std), class_type);
+	zend_object_std_init(&intern->std, class_type);
 	object_properties_init(&intern->std, class_type);
 
-	return &__builtin_no_change_bounds(intern->std);
+	return &intern->std;
 }
 /* }}} */
 
@@ -830,7 +830,7 @@ PHP_FUNCTION(xmlwriter_open_uri)
 		ze_obj = php_xmlwriter_fetch_object(xmlwriter_object_new(xmlwriter_class_entry_ce));
 		ze_obj->ptr = ptr;
 		ze_obj->output = NULL;
-		RETURN_OBJ(&__builtin_no_change_bounds(ze_obj->std));
+		RETURN_OBJ(&ze_obj->std);
 	}
 }
 /* }}} */
@@ -931,7 +931,7 @@ PHP_FUNCTION(xmlwriter_open_memory)
 		ze_obj = php_xmlwriter_fetch_object(xmlwriter_object_new(xmlwriter_class_entry_ce));
 		ze_obj->ptr = ptr;
 		ze_obj->output = output;
-		RETURN_OBJ(&__builtin_no_change_bounds(ze_obj->std));
+		RETURN_OBJ(&ze_obj->std);
 	}
 
 }

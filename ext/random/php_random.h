@@ -111,13 +111,13 @@ extern PHPAPI const php_random_algo php_random_algo_user;
 
 typedef struct _php_random_engine {
 	php_random_algo_with_state engine;
-	zend_object std;
+	zend_object std ZEND_STRUCT_PARENT;
 } php_random_engine;
 
 typedef struct _php_random_randomizer {
 	php_random_algo_with_state engine;
 	bool is_userland_algo;
-	zend_object std;
+	zend_object std ZEND_STRUCT_PARENT;
 } php_random_randomizer;
 
 extern PHPAPI zend_class_entry *random_ce_Random_Engine;

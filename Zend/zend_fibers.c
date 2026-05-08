@@ -712,7 +712,7 @@ ZEND_API zend_result zend_fiber_start(zend_fiber *fiber, zval *return_value)
 		return FAILURE;
 	}
 
-	fiber->previous = &__builtin_no_change_bounds(fiber->context);
+	fiber->previous = &fiber->context;
 
 	zend_fiber_transfer transfer = zend_fiber_resume_internal(fiber, NULL, false);
 
@@ -757,8 +757,8 @@ static zend_object *zend_fiber_object_create(zend_class_entry *ce)
 	zend_fiber *fiber = emalloc(sizeof(zend_fiber));
 	memset(fiber, 0, sizeof(zend_fiber));
 
-	zend_object_std_init(&__builtin_no_change_bounds(fiber->std), ce);
-	return &__builtin_no_change_bounds(fiber->std);
+	zend_object_std_init(&fiber->std, ce);
+	return &fiber->std;
 }
 
 static void zend_fiber_object_destroy(zend_object *object)
@@ -909,7 +909,7 @@ ZEND_METHOD(Fiber, start)
 		RETURN_THROWS();
 	}
 
-	fiber->previous = &__builtin_no_change_bounds(fiber->context);
+	fiber->previous = &fiber->context;
 
 	zend_fiber_transfer transfer = zend_fiber_resume_internal(fiber, NULL, false);
 
@@ -1089,7 +1089,7 @@ ZEND_METHOD(Fiber, getCurrent)
 		RETURN_NULL();
 	}
 
-	RETURN_OBJ_COPY(&__builtin_no_change_bounds(fiber->std));
+	RETURN_OBJ_COPY(&fiber->std);
 }
 
 ZEND_METHOD(FiberError, __construct)

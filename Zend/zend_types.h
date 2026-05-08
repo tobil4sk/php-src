@@ -387,14 +387,14 @@ typedef struct _zend_refcounted_h {
 } zend_refcounted_h;
 
 struct _zend_refcounted {
-	zend_refcounted_h gc;
+	zend_refcounted_h gc ZEND_STRUCT_PARENT;
 };
 
 struct _zend_string {
-	zend_refcounted_h gc;
+	zend_refcounted_h gc ZEND_STRUCT_PARENT;
 	zend_ulong        h;                /* hash value */
 	size_t            len;
-	char              val[1];
+	char              val[1] /*__subobject_variable_length*/;
 };
 
 
@@ -405,7 +405,7 @@ struct _zend_string {
 #endif
 
 typedef struct _Bucket {
-	zval              val;
+	zval              val ZEND_STRUCT_PARENT;
 	HT_KEY_TYPE       h;                /* hash value (or numeric index)   */
 	zend_string      *key;              /* string key or NULL for numerics */
 } Bucket;
@@ -413,7 +413,7 @@ typedef struct _Bucket {
 typedef struct _zend_array HashTable;
 
 struct _zend_array {
-	zend_refcounted_h gc;
+	zend_refcounted_h gc ZEND_STRUCT_PARENT;
 	union {
 		struct {
 			ZEND_ENDIAN_LOHI_4(
@@ -583,7 +583,7 @@ typedef struct _HashTableIterator {
 } HashTableIterator;
 
 struct _zend_object {
-	zend_refcounted_h gc;
+	zend_refcounted_h gc ZEND_STRUCT_PARENT;
 	uint32_t          handle; // TODO: may be removed ???
 	uint32_t          extra_flags; /* OBJ_EXTRA_FLAGS() */
 	zend_class_entry *ce;
@@ -593,7 +593,7 @@ struct _zend_object {
 };
 
 struct _zend_resource {
-	zend_refcounted_h gc;
+	zend_refcounted_h gc ZEND_STRUCT_PARENT;
 	zend_long         handle; // TODO: may be removed ???
 	int               type;
 	void             *ptr;
@@ -615,13 +615,13 @@ typedef union {
 #define ZEND_PROPERTY_INFO_SOURCE_IS_LIST(list) ((list) & 0x1)
 
 struct _zend_reference {
-	zend_refcounted_h              gc;
-	zval                           val;
+	zend_refcounted_h              gc ZEND_STRUCT_PARENT;
+	zval                           val ZEND_STRUCT_PARENT;
 	zend_property_info_source_list sources;
 };
 
 struct _zend_ast_ref {
-	zend_refcounted_h gc;
+	zend_refcounted_h gc ZEND_STRUCT_PARENT;
 	/*zend_ast        ast; zend_ast follows the zend_ast_ref structure */
 };
 
@@ -744,7 +744,7 @@ static zend_always_inline uint8_t zval_get_type(const zval* pz) {
 
 #define GC_DTOR(p) \
 	do { \
-		zend_refcounted_h *_p = &__builtin_no_change_bounds((p)->gc); \
+		zend_refcounted_h *_p = &(p)->gc; \
 		if (zend_gc_delref(_p) == 0) { \
 			rc_dtor_func((zend_refcounted *)_p); \
 		} else { \
@@ -754,7 +754,7 @@ static zend_always_inline uint8_t zval_get_type(const zval* pz) {
 
 #define GC_DTOR_NO_REF(p) \
 	do { \
-		zend_refcounted_h *_p = &__builtin_no_change_bounds((p)->gc); \
+		zend_refcounted_h *_p = &(p)->gc; \
 		if (zend_gc_delref(_p) == 0) { \
 			rc_dtor_func((zend_refcounted *)_p); \
 		} else { \
@@ -764,7 +764,7 @@ static zend_always_inline uint8_t zval_get_type(const zval* pz) {
 
 #define GC_TRY_DTOR_NO_REF(p) \
 	do { \
-		zend_refcounted_h *_p = &__builtin_no_change_bounds((p)->gc); \
+		zend_refcounted_h *_p = &(p)->gc; \
 		if (!(_p->u.type_info & GC_IMMUTABLE)) { \
 			if (zend_gc_delref(_p) == 0) { \
 				rc_dtor_func((zend_refcounted *)_p); \

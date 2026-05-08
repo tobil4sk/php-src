@@ -77,7 +77,7 @@ static inline dom_xpath_object *php_xpath_obj_from_obj(zend_object *obj) {
 #define Z_XPATHOBJ_P(zv)  php_xpath_obj_from_obj(Z_OBJ_P((zv)))
 
 typedef struct {
-	zend_object_iterator intern;
+	zend_object_iterator intern ZEND_STRUCT_PARENT;
 	zval curobj;
 	/* intern->index is only updated for FE_* opcodes, not for e.g. unpacking,
 	 * yet we need to track the position of the node relative to the start. */

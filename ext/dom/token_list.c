@@ -30,7 +30,7 @@
 #define Z_TOKEN_LIST_P(zv) php_dom_token_list_from_obj(Z_OBJ_P(zv))
 
 typedef struct dom_token_list_it {
-	zend_object_iterator it;
+	zend_object_iterator it ZEND_STRUCT_PARENT;
 	/* Store the hash position here to allow multiple (e.g. nested) iterations of the same token list. */
 	HashPosition pos;
 	php_libxml_cache_tag cache_tag;
@@ -777,7 +777,7 @@ zend_object_iterator *dom_token_list_get_iterator(zend_class_entry *ce, zval *ob
 	iterator->it.funcs = &dom_token_list_it_funcs;
 	iterator->cache_tag = intern->cache_tag;
 
-	return &__builtin_no_change_bounds(iterator->it);
+	return &iterator->it;
 }
 
 #endif

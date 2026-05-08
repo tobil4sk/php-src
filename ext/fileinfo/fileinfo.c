@@ -42,7 +42,7 @@ zend_class_entry *finfo_class_entry;
 
 typedef struct _finfo_object {
 	struct magic_set *magic;
-	zend_object zo;
+	zend_object zo ZEND_STRUCT_PARENT;
 } finfo_object;
 
 static inline finfo_object *php_finfo_fetch_object(zend_object *obj) {
@@ -71,7 +71,7 @@ PHP_FILEINFO_API zend_object *finfo_objects_new(zend_class_entry *class_type)
 	zend_object_std_init(&intern->zo, class_type);
 	object_properties_init(&intern->zo, class_type);
 
-	return &__builtin_no_change_bounds(intern->zo);
+	return &intern->zo;
 }
 /* }}} */
 

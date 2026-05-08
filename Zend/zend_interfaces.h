@@ -33,7 +33,7 @@ extern ZEND_API zend_class_entry *zend_ce_countable;
 extern ZEND_API zend_class_entry *zend_ce_stringable;
 
 typedef struct _zend_user_iterator {
-	zend_object_iterator     it;
+	zend_object_iterator     it ZEND_STRUCT_PARENT;
 	zend_class_entry         *ce;
 	zval                     value;
 } zend_user_iterator;

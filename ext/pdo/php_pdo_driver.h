@@ -516,7 +516,7 @@ struct _pdo_dbh_object_t {
        to allow the extending class to escape all the custom handlers
 	   that PDO declares.
     */
-	zend_object std;
+	zend_object std ZEND_STRUCT_PARENT;
 };
 
 static inline pdo_dbh_t *php_pdo_dbh_fetch_inner(zend_object *obj) {
@@ -636,7 +636,7 @@ struct _pdo_stmt_t {
        to allow the extending class to escape all the custom handlers
 	   that PDO declares.
     */
-	zend_object std;
+	zend_object std ZEND_STRUCT_PARENT;
 };
 
 
@@ -649,7 +649,7 @@ static inline pdo_stmt_t *php_pdo_stmt_fetch_object(zend_object *obj) {
 
 struct _pdo_row_t {
 	pdo_stmt_t *stmt;
-	zend_object std;
+	zend_object std ZEND_STRUCT_PARENT;
 };
 
 static inline pdo_row_t *php_pdo_row_fetch_object(zend_object *obj) {

@@ -177,7 +177,7 @@ typedef struct {
 	void *ptr;
 	zend_class_entry *ce;
 	reflection_type_t ref_type;
-	zend_object zo;
+	zend_object zo ZEND_STRUCT_PARENT;
 } reflection_object;
 
 static inline reflection_object *reflection_object_from_obj(zend_object *obj) {
@@ -298,7 +298,7 @@ static zend_object *reflection_objects_new(zend_class_entry *class_type) /* {{{ 
 
 	zend_object_std_init(&intern->zo, class_type);
 	object_properties_init(&intern->zo, class_type);
-	return &__builtin_no_change_bounds(intern->zo);
+	return &intern->zo;
 }
 /* }}} */
 

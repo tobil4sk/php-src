@@ -76,7 +76,7 @@
 #define SCP_DEBUG 0
 
 typedef struct _sccp_ctx {
-	scdf_ctx scdf;
+	scdf_ctx scdf ZEND_STRUCT_PARENT;
 	zend_call_info **call_map;
 	zval *values;
 	zval top;
@@ -2481,7 +2481,7 @@ int sccp_optimize_op_array(zend_optimizer_ctx *ctx, zend_op_array *op_array, zen
 	sccp.scdf.handlers.mark_feasible_successors = sccp_mark_feasible_successors;
 
 	scdf_init(ctx, &sccp.scdf, op_array, ssa);
-	scdf_solve(&__builtin_no_change_bounds(sccp.scdf), "SCCP");
+	scdf_solve(&sccp.scdf, "SCCP");
 
 	if (ctx->debug_level & ZEND_DUMP_SCCP) {
 		int i, first = 1;

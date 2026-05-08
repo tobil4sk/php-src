@@ -28,7 +28,7 @@ struct php_dom_libxml_ns_mapper {
 };
 
 typedef struct php_dom_private_data {
-	php_libxml_private_data_header header;
+	php_libxml_private_data_header header ZEND_STRUCT_PARENT;
 	struct php_dom_libxml_ns_mapper ns_mapper;
 	HashTable *template_fragments;
 } php_dom_private_data;

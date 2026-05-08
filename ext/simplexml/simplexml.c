@@ -87,7 +87,7 @@ static void node_as_zval(php_sxe_object *sxe, xmlNodePtr node, zval *value, SXE_
 
 	php_libxml_increment_node_ptr((php_libxml_node_object *)subnode, node, NULL);
 
-	ZVAL_OBJ(value, &__builtin_no_change_bounds(subnode->zo));
+	ZVAL_OBJ(value, &subnode->zo);
 }
 /* }}} */
 
@@ -938,7 +938,7 @@ static void get_base_node_value(php_sxe_object *sxe_ref, xmlNodePtr node, zval *
 		}
 		php_libxml_increment_node_ptr((php_libxml_node_object *)subnode, node, NULL);
 
-		ZVAL_OBJ(value, &__builtin_no_change_bounds(subnode->zo));
+		ZVAL_OBJ(value, &subnode->zo);
 	}
 }
 /* }}} */
@@ -2131,7 +2131,7 @@ sxe_object_clone(zend_object *object)
 
 	php_libxml_increment_node_ptr((php_libxml_node_object *)clone, nodep, NULL);
 
-	return &__builtin_no_change_bounds(clone->zo);
+	return &clone->zo;
 }
 /* }}} */
 
@@ -2193,7 +2193,7 @@ sxe_object_new(zend_class_entry *ce)
 	php_sxe_object    *intern;
 
 	intern = php_sxe_object_new(ce, php_sxe_find_fptr_count(ce));
-	return &__builtin_no_change_bounds(intern->zo);
+	return &intern->zo;
 }
 /* }}} */
 
@@ -2239,7 +2239,7 @@ PHP_FUNCTION(simplexml_load_file)
 	php_libxml_increment_doc_ref((php_libxml_node_object *)sxe, docp);
 	php_libxml_increment_node_ptr((php_libxml_node_object *)sxe, xmlDocGetRootElement(docp), NULL);
 
-	RETURN_OBJ(&__builtin_no_change_bounds(sxe->zo));
+	RETURN_OBJ(&sxe->zo);
 }
 /* }}} */
 
@@ -2293,7 +2293,7 @@ PHP_FUNCTION(simplexml_load_string)
 	php_libxml_increment_doc_ref((php_libxml_node_object *)sxe, docp);
 	php_libxml_increment_node_ptr((php_libxml_node_object *)sxe, xmlDocGetRootElement(docp), NULL);
 
-	RETURN_OBJ(&__builtin_no_change_bounds(sxe->zo));
+	RETURN_OBJ(&sxe->zo);
 }
 /* }}} */
 
@@ -2614,7 +2614,7 @@ PHP_FUNCTION(simplexml_import_dom)
 		php_libxml_increment_doc_ref((php_libxml_node_object *)sxe, nodep->doc);
 		php_libxml_increment_node_ptr((php_libxml_node_object *)sxe, nodep, NULL);
 
-		RETURN_OBJ(&__builtin_no_change_bounds(sxe->zo));
+		RETURN_OBJ(&sxe->zo);
 	} else {
 		php_error_docref(NULL, E_WARNING, "Invalid Nodetype to import");
 		RETVAL_NULL();

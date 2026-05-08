@@ -57,7 +57,7 @@ typedef struct _php_period_obj php_period_obj;
 
 struct _php_date_obj {
 	timelib_time *time;
-	zend_object   std;
+	zend_object   std ZEND_STRUCT_PARENT;
 };
 
 static inline php_date_obj *php_date_obj_from_obj(zend_object *obj) {
@@ -74,7 +74,7 @@ struct _php_timezone_obj {
 		timelib_sll       utc_offset; /* TIMELIB_ZONETYPE_OFFSET */
 		timelib_abbr_info z;          /* TIMELIB_ZONETYPE_ABBR */
 	} tzi;
-	zend_object std;
+	zend_object std ZEND_STRUCT_PARENT;
 };
 
 static inline php_timezone_obj *php_timezone_obj_from_obj(zend_object *obj) {
@@ -92,7 +92,7 @@ struct _php_interval_obj {
 	bool              initialized;
 	bool              from_string;
 	zend_string      *date_string;
-	zend_object       std;
+	zend_object       std ZEND_STRUCT_PARENT;
 };
 
 static inline php_interval_obj *php_interval_obj_from_obj(zend_object *obj) {
@@ -111,7 +111,7 @@ struct _php_period_obj {
 	bool              initialized;
 	bool              include_start_date;
 	bool              include_end_date;
-	zend_object       std;
+	zend_object       std ZEND_STRUCT_PARENT;
 };
 
 static inline php_period_obj *php_period_obj_from_obj(zend_object *obj) {

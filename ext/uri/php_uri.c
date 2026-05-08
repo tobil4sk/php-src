@@ -566,7 +566,7 @@ PHP_METHOD(Uri_Rfc3986_Uri, withUserInfo)
 	php_uri_object *old_uri_object = php_uri_object_from_obj(Z_OBJ_P(ZEND_THIS));
 	ZEND_ASSERT(old_uri_object->uri != NULL);
 
-	zend_object *new_object = old_uri_object->std.handlers->clone_obj(&__builtin_no_change_bounds(old_uri_object->std));
+	zend_object *new_object = old_uri_object->std.handlers->clone_obj(&old_uri_object->std);
 	if (new_object == NULL) {
 		RETURN_THROWS();
 	}
@@ -1024,12 +1024,12 @@ PHPAPI php_uri_object *php_uri_object_create(zend_class_entry *class_type, const
 
 static zend_object *php_uri_object_create_rfc3986(zend_class_entry *ce)
 {
-	return &__builtin_no_change_bounds(php_uri_object_create(ce, &php_uri_parser_rfc3986)->std);
+	return &php_uri_object_create(ce, &php_uri_parser_rfc3986)->std;
 }
 
 static zend_object *php_uri_object_create_whatwg(zend_class_entry *ce)
 {
-	return &__builtin_no_change_bounds(php_uri_object_create(ce, &php_uri_parser_whatwg)->std);
+	return &php_uri_object_create(ce, &php_uri_parser_whatwg)->std;
 }
 
 PHPAPI void php_uri_object_handler_free(zend_object *object)
@@ -1056,7 +1056,7 @@ PHPAPI zend_object *php_uri_object_handler_clone(zend_object *object)
 
 	zend_objects_clone_members(&new_uri_object->std, &uri_object->std);
 
-	return &__builtin_no_change_bounds(new_uri_object->std);
+	return &new_uri_object->std;
 }
 
 PHPAPI zend_result php_uri_parser_register(const php_uri_parser *uri_parser)

@@ -906,4 +906,12 @@ static zend_always_inline uint64_t ZEND_BYTES_SWAP64(uint64_t u)
 # define ZEND_OPCACHE_SHM_REATTACHMENT 1
 #endif
 
+#if defined(__CHERI_PURE_CAPABILITY__) && defined(__FreeBSD__)
+#  include <sys/cdefs.h>
+#  define ZEND_STRUCT_PARENT __subobject_member_used_for_c_inheritance
+#else
+#  define ZEND_STRUCT_PARENT
+#endif
+
+
 #endif /* ZEND_PORTABILITY_H */

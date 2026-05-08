@@ -36,7 +36,7 @@
 static int le_protocols;
 
 struct php_user_stream_wrapper {
-	php_stream_wrapper wrapper;
+	php_stream_wrapper wrapper ZEND_STRUCT_PARENT;
 	char * protoname;
 	zend_class_entry *ce;
 	zend_resource *resource;
@@ -475,7 +475,7 @@ PHP_FUNCTION(stream_wrapper_register)
 
 	rsrc = zend_register_resource(uwrap, le_protocols);
 
-	if (php_register_url_stream_wrapper_volatile(protocol, &__builtin_no_change_bounds(uwrap->wrapper)) == SUCCESS) {
+	if (php_register_url_stream_wrapper_volatile(protocol, &uwrap->wrapper) == SUCCESS) {
 		uwrap->resource = rsrc;
 		RETURN_TRUE;
 	}

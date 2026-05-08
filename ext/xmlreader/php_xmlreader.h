@@ -43,7 +43,7 @@ typedef struct _xmlreader_object {
 	/* strings must be set in input buffer as copy is required */
 	xmlParserInputBufferPtr input;
 	void *schema;
-	zend_object  std;
+	zend_object  std ZEND_STRUCT_PARENT;
 } xmlreader_object;
 
 static inline xmlreader_object *php_xmlreader_fetch_object(zend_object *obj) {

@@ -69,7 +69,7 @@ struct _php_hashcontext_object {
 	zend_long options;
 	unsigned char *key;
 
-	zend_object std;
+	zend_object std ZEND_STRUCT_PARENT;
 };
 
 static inline php_hashcontext_object *php_hashcontext_from_object(zend_object *obj) {

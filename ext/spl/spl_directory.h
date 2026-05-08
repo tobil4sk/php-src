@@ -85,7 +85,7 @@ struct _spl_filesystem_object {
 			bool               is_escape_default;
 		} file;
 	} u;
-	zend_object        std;
+	zend_object        std ZEND_STRUCT_PARENT;
 };
 
 #define SPL_FILE_OBJECT_DROP_NEW_LINE      0x00000001 /* drop new lines */

@@ -101,13 +101,13 @@ struct _zend_fiber_context {
 
 struct _zend_fiber {
 	/* PHP object handle. */
-	zend_object std;
+	zend_object std ZEND_STRUCT_PARENT;
 
 	/* Flags are defined in enum zend_fiber_flag. */
 	uint8_t flags;
 
 	/* Native C fiber context. */
-	zend_fiber_context context;
+	zend_fiber_context context ZEND_STRUCT_PARENT;
 
 	/* Fiber that resumed us. */
 	zend_fiber_context *caller;

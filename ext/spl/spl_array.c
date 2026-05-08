@@ -52,7 +52,7 @@ typedef struct _spl_array_object {
 	zend_function     *fptr_offset_del;
 	zend_function     *fptr_count;
 	zend_class_entry* ce_get_iterator;
-	zend_object       std;
+	zend_object       std ZEND_STRUCT_PARENT;
 } spl_array_object;
 
 static inline spl_array_object *spl_array_from_obj(zend_object *obj) /* {{{ */ {
@@ -162,7 +162,7 @@ static zend_object *spl_array_object_new_ex(zend_class_entry *class_type, zend_o
 
 	intern = zend_object_alloc(sizeof(spl_array_object), parent);
 
-	zend_object_std_init(&__builtin_no_change_bounds(intern->std), class_type);
+	zend_object_std_init(&intern->std, class_type);
 	object_properties_init(&intern->std, class_type);
 
 	intern->ar_flags = 0;
@@ -236,7 +236,7 @@ static zend_object *spl_array_object_new_ex(zend_class_entry *class_type, zend_o
 	}
 
 	intern->ht_iter = (uint32_t)-1;
-	return &__builtin_no_change_bounds(intern->std);
+	return &intern->std;
 }
 /* }}} */
 
@@ -1568,7 +1568,7 @@ PHP_METHOD(ArrayObject, __debugInfo)
 
 /*** ArrayIterator class ***/
 typedef struct _spl_array_iterator {
-	zend_object_iterator it;
+	zend_object_iterator it ZEND_STRUCT_PARENT;
 	bool by_ref;
 } spl_array_iterator;
 
@@ -1705,7 +1705,7 @@ static zend_object_iterator *spl_array_get_iterator(zend_class_entry *ce, zval *
 	iterator->it.funcs = &spl_array_it_funcs;
 	iterator->by_ref = by_ref;
 
-	return &__builtin_no_change_bounds(iterator->it);
+	return &iterator->it;
 }
 /* }}} */
 

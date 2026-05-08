@@ -88,7 +88,7 @@ typedef struct _spl_recursive_it_object {
 	zend_class_entry         *ce;
 	zend_string              *prefix[6];
 	zend_string              *postfix[1];
-	zend_object              std;
+	zend_object              std ZEND_STRUCT_PARENT;
 } spl_recursive_it_object;
 
 typedef struct _spl_recursive_it_iterator {
@@ -132,7 +132,7 @@ typedef struct _spl_dual_it_object {
 		} regex;
 		zend_fcall_info_cache callback_filter;
 	} u;
-	zend_object              std;
+	zend_object              std ZEND_STRUCT_PARENT;
 } spl_dual_it_object;
 
 static zend_object_handlers spl_handlers_rec_it_it;
@@ -968,10 +968,10 @@ static zend_object *spl_RecursiveIteratorIterator_new_ex(zend_class_entry *class
 		intern->postfix[0] = ZSTR_EMPTY_ALLOC();
 	}
 
-	zend_object_std_init(&__builtin_no_change_bounds(intern->std), class_type);
+	zend_object_std_init(&intern->std, class_type);
 	object_properties_init(&intern->std, class_type);
 
-	return &__builtin_no_change_bounds(intern->std);
+	return &intern->std;
 }
 /* }}} */
 
@@ -2111,7 +2111,7 @@ static zend_object *spl_dual_it_new(zend_class_entry *class_type)
 	zend_object_std_init(&intern->std, class_type);
 	object_properties_init(&intern->std, class_type);
 
-	return &__builtin_no_change_bounds(intern->std);
+	return &intern->std;
 }
 /* }}} */
 

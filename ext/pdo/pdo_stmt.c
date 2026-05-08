@@ -213,7 +213,7 @@ static void pdo_get_lazy_object(pdo_stmt_t *stmt, zval *return_value) /* {{{ */
 		row->stmt = stmt;
 		zend_object_std_init(&row->std, pdo_row_ce);
 		object_properties_init(&row->std, pdo_row_ce);
-		stmt->lazy_object_ref = &__builtin_no_change_bounds(row->std);
+		stmt->lazy_object_ref = &row->std;
 		GC_ADDREF(&stmt->std);
 		GC_DELREF(&row->std);
 	}
@@ -2066,14 +2066,14 @@ zend_object *pdo_dbstmt_new(zend_class_entry *ce)
 	zend_object_std_init(&stmt->std, ce);
 	object_properties_init(&stmt->std, ce);
 
-	return &__builtin_no_change_bounds(stmt->std);
+	return &stmt->std;
 }
 /* }}} */
 
 /* {{{ statement iterator */
 
 struct php_pdo_iterator {
-	zend_object_iterator iter;
+	zend_object_iterator iter ZEND_STRUCT_PARENT;
 	zend_ulong key;
 	zval fetch_ahead;
 };
@@ -2179,7 +2179,7 @@ zend_object_iterator *pdo_stmt_iter_get(zend_class_entry *ce, zval *object, int 
 		ZVAL_UNDEF(&I->fetch_ahead);
 	}
 
-	return &__builtin_no_change_bounds(I->iter);
+	return &I->iter;
 }
 
 /* }}} */
@@ -2401,7 +2401,7 @@ static void pdo_row_free_storage(zend_object *std)
 	pdo_row_t *row = php_pdo_row_fetch_object(std);
 	if (row->stmt) {
 		row->stmt->lazy_object_ref = NULL;
-		OBJ_RELEASE(&__builtin_no_change_bounds(row->stmt->std));
+		OBJ_RELEASE(&row->stmt->std);
 	}
 	zend_object_std_dtor(std);
 }
@@ -2412,7 +2412,7 @@ static zend_object *pdo_row_new(zend_class_entry *ce)
 	zend_object_std_init(&row->std, ce);
 	object_properties_init(&row->std, ce);
 
-	return &__builtin_no_change_bounds(row->std);
+	return &row->std;
 }
 
 void pdo_stmt_init(void)

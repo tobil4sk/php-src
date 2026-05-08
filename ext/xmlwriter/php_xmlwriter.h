@@ -36,7 +36,7 @@ extern zend_module_entry xmlwriter_module_entry;
 typedef struct _ze_xmlwriter_object {
 	xmlTextWriterPtr ptr;
 	smart_str *output;
-	zend_object std;
+	zend_object std ZEND_STRUCT_PARENT;
 } ze_xmlwriter_object;
 
 static inline ze_xmlwriter_object *php_xmlwriter_fetch_object(zend_object *obj) {

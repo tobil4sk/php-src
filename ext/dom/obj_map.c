@@ -29,7 +29,7 @@
 static zend_always_inline void objmap_cache_release_cached_obj(dom_nnodemap_object *objmap)
 {
 	if (objmap->cached_obj) {
-		OBJ_RELEASE(&__builtin_no_change_bounds(objmap->cached_obj->std));
+		OBJ_RELEASE(&objmap->cached_obj->std);
 		objmap->cached_obj = NULL;
 		objmap->cached_obj_index = 0;
 	}
@@ -452,7 +452,7 @@ void php_dom_create_obj_map(dom_object *basenode, dom_object *intern, xmlHashTab
 		if (doc != NULL && (tmp = xmlDictExists(doc->dict, (const xmlChar *)ZSTR_VAL(local), len)) != NULL) {
 			mapptr->local = BAD_CAST tmp;
 		} else {
-			mapptr->local = BAD_CAST ZSTR_VAL(zend_string_copy(local));
+			mapptr->local = BAD_CAST __builtin_no_change_bounds(ZSTR_VAL(zend_string_copy(local)));
 			mapptr->release_local = true;
 		}
 		mapptr->local_lower = zend_string_tolower(local);
@@ -463,7 +463,7 @@ void php_dom_create_obj_map(dom_object *basenode, dom_object *intern, xmlHashTab
 		if (doc != NULL && (tmp = xmlDictExists(doc->dict, (const xmlChar *)ZSTR_VAL(ns), len)) != NULL) {
 			mapptr->ns = BAD_CAST tmp;
 		} else {
-			mapptr->ns = BAD_CAST ZSTR_VAL(zend_string_copy(ns));
+			mapptr->ns = BAD_CAST __builtin_no_change_bounds(ZSTR_VAL(zend_string_copy(ns)));
 			mapptr->release_ns = true;
 		}
 	}

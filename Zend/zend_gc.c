@@ -2326,7 +2326,7 @@ static ZEND_FUNCTION(gc_destructor_fiber)
 				GC_G(dtor_fiber) = NULL;
 			}
 			GC_DELREF(&fiber->std);
-			gc_check_possible_root((zend_refcounted*)&__builtin_no_change_bounds(fiber->std.gc));
+			gc_check_possible_root((zend_refcounted*)&fiber->std.gc);
 			return;
 		}
 	}

@@ -26,7 +26,7 @@ typedef struct _dom_object {
 	void *ptr;
 	php_libxml_ref_obj *document;
 	HashTable *prop_handler;
-	zend_object std;
+	zend_object std ZEND_STRUCT_PARENT;
 } dom_object;
 
 static inline dom_object *php_dom_obj_from_obj(zend_object *obj) {

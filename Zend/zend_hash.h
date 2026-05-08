@@ -1047,7 +1047,7 @@ static zend_always_inline void *zend_hash_get_current_data_ptr_ex(const HashTabl
 				_idx++; \
 			} else { \
 				Bucket *_p = (Bucket*)__z; \
-				__z = &__builtin_no_change_bounds((_p + 1)->val); \
+				__z = &(_p + 1)->val; \
 				__h = _p->h; \
 				__key = _p->key; \
 				if (indirect && Z_TYPE_P(_z) == IS_INDIRECT) { \
@@ -1075,7 +1075,7 @@ static zend_always_inline void *zend_hash_get_current_data_ptr_ex(const HashTabl
 			} else { \
 				Bucket *_p = (Bucket*)__z; \
 				_p--; \
-				__z = &__builtin_no_change_bounds(_p->val); \
+				__z = &_p->val; \
 				_z = __z; \
 				__h = _p->h; \
 				__key = _p->key; \
@@ -1254,7 +1254,7 @@ static zend_always_inline void *zend_hash_get_current_data_ptr_ex(const HashTabl
 		const Bucket *_end = __ht->arData + __ht->nNumUsed; \
 		ZEND_ASSERT(!HT_IS_PACKED(__ht)); \
 		for (; _p != _end; _p++) { \
-			zval *_z = &__builtin_no_change_bounds(_p->val); \
+			zval *_z = &_p->val; \
 			if (indirect && Z_TYPE_P(_z) == IS_INDIRECT) { \
 				_z = Z_INDIRECT_P(_z); \
 			} \

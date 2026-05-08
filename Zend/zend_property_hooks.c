@@ -23,7 +23,7 @@
 #include "zend_property_hooks.h"
 
 typedef struct {
-	zend_object_iterator it;
+	zend_object_iterator it ZEND_STRUCT_PARENT;
 	bool by_ref;
 	bool declared_props_done;
 	zval declared_props;
@@ -387,5 +387,5 @@ ZEND_API zend_object_iterator *zend_hooked_object_get_iterator(zend_class_entry 
 	ZVAL_UNDEF(&iterator->current_key);
 	ZVAL_UNDEF(&iterator->current_data);
 
-	return &__builtin_no_change_bounds(iterator->it);
+	return &iterator->it;
 }

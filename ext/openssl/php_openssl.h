@@ -156,7 +156,7 @@ PHP_OPENSSL_API zend_string* php_openssl_decrypt(
 
 typedef struct _php_openssl_certificate_object {
 	X509 *x509;
-	zend_object std;
+	zend_object std ZEND_STRUCT_PARENT;
 } php_openssl_certificate_object;
 
 extern zend_class_entry *php_openssl_certificate_ce;
@@ -173,7 +173,7 @@ bool php_openssl_is_certificate_ce(zval *val);
 
 typedef struct _php_openssl_x509_request_object {
 	X509_REQ *csr;
-	zend_object std;
+	zend_object std ZEND_STRUCT_PARENT;
 } php_openssl_request_object;
 
 static inline php_openssl_request_object *php_openssl_request_from_obj(zend_object *obj) {
@@ -189,7 +189,7 @@ bool php_openssl_is_request_ce(zval *val);
 typedef struct _php_openssl_pkey_object {
 	EVP_PKEY *pkey;
 	bool is_private;
-	zend_object std;
+	zend_object std ZEND_STRUCT_PARENT;
 } php_openssl_pkey_object;
 
 static inline php_openssl_pkey_object *php_openssl_pkey_from_obj(zend_object *obj) {

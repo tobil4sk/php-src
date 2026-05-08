@@ -81,12 +81,12 @@ struct _spl_dllist_object {
 	zend_function         *fptr_offset_del;
 	zend_function         *fptr_count;
 	zend_class_entry      *ce_get_iterator;
-	zend_object            std;
+	zend_object            std ZEND_STRUCT_PARENT;
 };
 
 /* define an overloaded iterator structure */
 struct _spl_dllist_it {
-	zend_object_iterator   intern;
+	zend_object_iterator   intern ZEND_STRUCT_PARENT;
 	spl_ptr_llist_element *traverse_pointer;
 	int                    traverse_position;
 	int                    flags;
@@ -383,7 +383,7 @@ static zend_object *spl_dllist_object_new_ex(zend_class_entry *class_type, zend_
 		}
 	}
 
-	return &__builtin_no_change_bounds(intern->std);
+	return &intern->std;
 }
 /* }}} */
 
@@ -1245,7 +1245,7 @@ static zend_object_iterator *spl_dllist_get_iterator(zend_class_entry *ce, zval 
 
 	SPL_LLIST_CHECK_ADDREF(iterator->traverse_pointer);
 
-	return &__builtin_no_change_bounds(iterator->intern);
+	return &iterator->intern;
 }
 /* }}} */
 

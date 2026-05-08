@@ -203,7 +203,7 @@ zend_object_iterator *php_dom_get_iterator(zend_class_entry *ce, zval *object, i
 	objmap = (dom_nnodemap_object *)intern->ptr;
 	objmap->handler->get_item(objmap, 0, &iterator->curobj);
 
-	return &__builtin_no_change_bounds(iterator->intern);
+	return &iterator->intern;
 }
 /* }}} */
 

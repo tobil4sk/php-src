@@ -197,22 +197,22 @@ PHPAPI uint64_t php_random_range64(php_random_algo_with_state engine, uint64_t u
 
 static zend_object *php_random_engine_mt19937_new(zend_class_entry *ce)
 {
-	return &__builtin_no_change_bounds(php_random_engine_common_init(ce, &php_random_algo_mt19937)->std);
+	return &php_random_engine_common_init(ce, &php_random_algo_mt19937)->std;
 }
 
 static zend_object *php_random_engine_pcgoneseq128xslrr64_new(zend_class_entry *ce)
 {
-	return &__builtin_no_change_bounds(php_random_engine_common_init(ce, &php_random_algo_pcgoneseq128xslrr64)->std);
+	return &php_random_engine_common_init(ce, &php_random_algo_pcgoneseq128xslrr64)->std;
 }
 
 static zend_object *php_random_engine_xoshiro256starstar_new(zend_class_entry *ce)
 {
-	return &__builtin_no_change_bounds(php_random_engine_common_init(ce, &php_random_algo_xoshiro256starstar)->std);
+	return &php_random_engine_common_init(ce, &php_random_algo_xoshiro256starstar)->std;
 }
 
 static zend_object *php_random_engine_secure_new(zend_class_entry *ce)
 {
-	return &__builtin_no_change_bounds(php_random_engine_common_init(ce, &php_random_algo_secure)->std);
+	return &php_random_engine_common_init(ce, &php_random_algo_secure)->std;
 }
 
 static zend_object *php_random_randomizer_new(zend_class_entry *ce)
@@ -222,7 +222,7 @@ static zend_object *php_random_randomizer_new(zend_class_entry *ce)
 	zend_object_std_init(&randomizer->std, ce);
 	object_properties_init(&randomizer->std, ce);
 
-	return &__builtin_no_change_bounds(randomizer->std);
+	return &randomizer->std;
 }
 
 static void randomizer_free_obj(zend_object *object) {
@@ -285,7 +285,7 @@ PHPAPI zend_object *php_random_engine_common_clone_object(zend_object *object)
 
 	zend_objects_clone_members(&new_engine->std, &old_engine->std);
 
-	return &__builtin_no_change_bounds(new_engine->std);
+	return &new_engine->std;
 }
 
 /* {{{ php_random_range */

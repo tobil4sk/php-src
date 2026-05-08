@@ -55,7 +55,7 @@ typedef struct _spl_SplObjectStorage { /* {{{ */
 	 * In MultipleIterator on a different class hierarchy, flags is a user settable value controlling iteration behavior. */
 	zend_long         flags;
 	zend_function    *fptr_get_hash;
-	zend_object       std;
+	zend_object       std ZEND_STRUCT_PARENT;
 } spl_SplObjectStorage; /* }}} */
 
 /* {{{ storage is an assoc array of [zend_object*]=>[zval *obj, zval *inf] */
@@ -303,7 +303,7 @@ static zend_object *spl_object_storage_new_ex(zend_class_entry *class_type, zend
 		spl_object_storage_addall(intern, other);
 	}
 
-	return &__builtin_no_change_bounds(intern->std);
+	return &intern->std;
 }
 /* }}} */
 

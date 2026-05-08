@@ -23,16 +23,16 @@
 
 typedef struct _zend_weakref {
 	zend_object *referent;
-	zend_object std;
+	zend_object std ZEND_STRUCT_PARENT;
 } zend_weakref;
 
 typedef struct _zend_weakmap {
-	HashTable ht;
-	zend_object std;
+	HashTable ht ZEND_STRUCT_PARENT;
+	zend_object std ZEND_STRUCT_PARENT;
 } zend_weakmap;
 
 typedef struct _zend_weakmap_iterator {
-	zend_object_iterator it;
+	zend_object_iterator it ZEND_STRUCT_PARENT;
 	uint32_t ht_iter;
 } zend_weakmap_iterator;
 
@@ -231,7 +231,7 @@ static zend_object* zend_weakref_new(zend_class_entry *ce) {
 	zend_weakref *wr = zend_object_alloc(sizeof(zend_weakref), zend_ce_weakref);
 
 	zend_object_std_init(&wr->std, zend_ce_weakref);
-	return &__builtin_no_change_bounds(wr->std);
+	return &wr->std;
 }
 
 static zend_always_inline bool zend_weakref_find(zend_object *referent, zval *return_value) {
@@ -246,7 +246,7 @@ static zend_always_inline bool zend_weakref_find(zend_object *referent, zval *re
 		zend_weakref *wr;
 found_weakref:
 		wr = ptr;
-		RETVAL_OBJ_COPY(&__builtin_no_change_bounds(wr->std));
+		RETVAL_OBJ_COPY(&wr->std);
 		return 1;
 	}
 
@@ -343,7 +343,7 @@ static zend_object *zend_weakmap_create_object(zend_class_entry *ce)
 	zend_object_std_init(&wm->std, ce);
 
 	zend_hash_init(&wm->ht, 0, NULL, ZVAL_PTR_DTOR, 0);
-	return &__builtin_no_change_bounds(wm->std);
+	return &wm->std;
 }
 
 static void zend_weakmap_free_obj(zend_object *object)
@@ -414,7 +414,7 @@ static void zend_weakmap_write_dimension(zend_object *object, zval *offset, zval
 		return;
 	}
 
-	zend_weakref_register(obj_addr, ZEND_WEAKREF_ENCODE(&__builtin_no_change_bounds(wm->ht), ZEND_WEAKREF_TAG_MAP));
+	zend_weakref_register(obj_addr, ZEND_WEAKREF_ENCODE(&wm->ht, ZEND_WEAKREF_TAG_MAP));
 	zend_hash_index_add_new(&wm->ht, obj_key, value);
 }
 
@@ -552,7 +552,7 @@ HashTable *zend_weakmap_get_object_key_entry_gc(zend_object *object, zval **tabl
 				zval *zv = zend_hash_index_find(&wm->ht, obj_key);
 				ZEND_ASSERT(zv);
 				zend_get_gc_buffer_add_ptr(gc_buffer, zv);
-				zend_get_gc_buffer_add_obj(gc_buffer, &__builtin_no_change_bounds(wm->std));
+				zend_get_gc_buffer_add_obj(gc_buffer, &wm->std);
 			} else if (ZEND_WEAKREF_GET_TAG(tagged_ptr) == ZEND_WEAKREF_TAG_BARE_HT) {
 				/* Bare HashTables are intentionally ignored, since they are
 				 * intended for internal usage by extensions and might not be
@@ -561,10 +561,10 @@ HashTable *zend_weakmap_get_object_key_entry_gc(zend_object *object, zval **tabl
 		} ZEND_HASH_FOREACH_END();
 	} else if (tag == ZEND_WEAKREF_TAG_MAP) {
 		zend_weakmap *wm = (zend_weakmap*) ptr;
-		zval *zv = zend_hash_index_find(&__builtin_no_change_bounds(wm->ht), obj_key);
+		zval *zv = zend_hash_index_find(&wm->ht, obj_key);
 		ZEND_ASSERT(zv);
 		zend_get_gc_buffer_add_ptr(gc_buffer, zv);
-		zend_get_gc_buffer_add_obj(gc_buffer, &__builtin_no_change_bounds(wm->std));
+		zend_get_gc_buffer_add_obj(gc_buffer, &wm->std);
 	} else if (tag == ZEND_WEAKREF_TAG_BARE_HT) {
 		/* Bare HashTables are intentionally ignored (see above) */
 	}
@@ -715,7 +715,7 @@ static zend_object_iterator *zend_weakmap_get_iterator(
 	iter->it.funcs = &zend_weakmap_iterator_funcs;
 	ZVAL_COPY(&iter->it.data, object);
 	iter->ht_iter = zend_hash_iterator_add(&wm->ht, 0);
-	return &__builtin_no_change_bounds(iter->it);
+	return &iter->it;
 }
 
 ZEND_METHOD(WeakMap, offsetGet)

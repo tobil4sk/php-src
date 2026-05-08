@@ -428,7 +428,7 @@ zend_object *xmlreader_objects_new(zend_class_entry *class_type)
 	zend_object_std_init(&intern->std, class_type);
 	object_properties_init(&intern->std, class_type);
 
-	return &__builtin_no_change_bounds(intern->std);
+	return &intern->std;
 }
 /* }}} */
 

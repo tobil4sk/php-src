@@ -143,7 +143,7 @@ typedef struct php_uri_internal {
 typedef struct php_uri_object {
 	const php_uri_parser *parser;
 	void *uri;
-	zend_object std;
+	zend_object std ZEND_STRUCT_PARENT;
 } php_uri_object;
 
 static inline php_uri_object *php_uri_object_from_obj(zend_object *object) {

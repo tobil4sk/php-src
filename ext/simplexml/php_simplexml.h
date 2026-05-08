@@ -64,7 +64,7 @@ typedef struct {
 	} iter;
 	zval tmp;
 	zend_function *fptr_count;
-	zend_object zo;
+	zend_object zo ZEND_STRUCT_PARENT;
 } php_sxe_object;
 
 #ifdef PHP_WIN32
