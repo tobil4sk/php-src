@@ -395,7 +395,7 @@ struct _zend_string {
 	zend_ulong        h;                /* hash value */
 	size_t            len;
 	char              val[1] /*__subobject_variable_length*/;
-};
+} __no_subobject_bounds;
 
 
 #ifdef __CHERI_PURE_CAPABILITY__
