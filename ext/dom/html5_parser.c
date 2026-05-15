@@ -292,6 +292,7 @@ static lexbor_libxml2_bridge_status lexbor_libxml2_bridge_convert(
             xmlAddChild(lxml_parent, lxml_text);
             if (node->line >= USHRT_MAX) {
                 lxml_text->line = USHRT_MAX;
+		// Fix warning
                 lxml_text->psvi = (void *) (ptrdiff_t) node->line;
             } else {
                 lxml_text->line = (unsigned short) node->line;

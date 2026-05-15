@@ -266,7 +266,10 @@ static void phpdbg_change_watchpoint_access(phpdbg_watchpoint_t *watch, int acce
 #endif
 	/* pagesize is assumed to be in the range of 2^x */
 	{
-		mprotect(page_addr, size, access);
+		int i = mprotect(page_addr, size, access);
+		if (i != 0) {
+			printf("change mprotect failed page= %#p, ptr= %#p\n", page_addr, watch->addr.ptr);
+		}
 	}
 }
 
@@ -295,11 +298,16 @@ zend_result phpdbg_watchpoint_segfault_handler(siginfo_t *info, void *context) {
 
 	/* perhaps unnecessary, but check to be sure to not conflict with other segfault handlers */
 	if (phpdbg_check_for_watchpoint(&PHPDBG_G(watchpoint_tree), page) == NULL) {
+		printf("handler failure %#p\n", page);
 		return FAILURE;
 	}
 
 	/* re-enable writing */
-	mprotect(page, phpdbg_pagesize, PROT_READ | PROT_WRITE);
+	int i = mprotect(page, phpdbg_pagesize, PROT_READ | PROT_WRITE);
+	if (i != 0) {
+		printf("mprotect failed %#p\n", page);
+		return FAILURE;
+	}
 
 	zend_hash_index_add_empty_element(PHPDBG_G(watchlist_mem), (HT_KEY_TYPE) page);
 
@@ -1147,7 +1155,10 @@ void phpdbg_reenable_memory_watches(void) {
 				} else
 #endif
 				{
-					mprotect(zend_mm_page_ptr((void *) page), phpdbg_pagesize, PROT_READ);
+					int i = mprotect(zend_mm_page_ptr((void *) page), phpdbg_pagesize, PROT_READ);
+					if (i != 0) {
+						printf("reenable mprotect failed %#p, %#p\n", page, zend_mm_page_ptr((void*)page));
+					}
 				}
 			}
 		}

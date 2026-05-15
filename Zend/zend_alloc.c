@@ -536,6 +536,9 @@ static void *zend_mm_mmap_fixed(void *addr, size_t size)
 		zend_mm_munmap(ptr, size);
 		return NULL;
 	}
+#ifdef __CHERI_PURE_CAPABILITY__
+	assert(cheri_length_get(ptr) == size);
+#endif
 	return ptr;
 #endif
 }
@@ -1934,8 +1937,10 @@ static zend_always_inline void *zend_mm_realloc_heap(zend_mm_heap *heap, void *p
 #ifdef __CHERI_PURE_CAPABILITY__
 # if ZEND_DEBUG
 				ret = cheri_bounds_set(ret, real_size);
+				assert(cheri_length_get(ret) == real_size);
 # else
 				ret = cheri_bounds_set(ret, size);
+				assert(cheri_length_get(ret) == size);
 # endif
 #endif
 				return ret;
@@ -1961,8 +1966,12 @@ static zend_always_inline void *zend_mm_realloc_heap(zend_mm_heap *heap, void *p
 					ptr = cheri_address_set(ZEND_MM_PAGE_ADDR(chunk, page_num), address);
 # if ZEND_DEBUG
 					ptr = cheri_bounds_set(ptr, real_size);
+					assert(cheri_length_get(ptr) == real_size);
+					assert(cheri_is_valid(ptr));
 # else
 					ptr = cheri_bounds_set(ptr, size);
+					assert(cheri_length_get(ptr) == size);
+					assert(cheri_is_valid(ptr));
 # endif
 #endif
 					return ptr;
@@ -1987,8 +1996,10 @@ static zend_always_inline void *zend_mm_realloc_heap(zend_mm_heap *heap, void *p
 #endif
 #ifdef __CHERI_PURE_CAPABILITY__
 # if ZEND_DEBUG
+					assert(cheri_length_get(ptr) > real_size);
 					ptr = cheri_bounds_set(ptr, real_size);
 # else
+					assert(cheri_length_get(ptr) > size);
 					ptr = cheri_bounds_set(ptr, size);
 # endif
 #endif
@@ -3295,6 +3306,10 @@ static void *tracked_malloc(size_t size ZEND_FILE_LINE_DC ZEND_FILE_LINE_ORIG_DC
 	heap->size += size;
 	heap->real_size = heap->size;
 #endif
+
+#ifdef __CHERI_PURE_CAPABILITY__
+	assert(cheri_length_get(ptr) == size);
+#endif
 	return ptr;
 }
 
@@ -3834,6 +3849,9 @@ ZEND_API void * __zend_realloc(void *p, size_t len ZEND_FILE_LINE_DC ZEND_FILE_L
 {
 	p = realloc(p, len);
 	if (EXPECTED(p || !len)) {
+#ifdef __CHERI_PURE_CAPAIBLITY__
+		assert(cheri_length_get(p) == len);
+#endif
 		return p;
 	}
 	zend_out_of_memory();
